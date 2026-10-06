@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Timetable - BVC</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f6fa;
+            min-height: 100vh;
+            padding: 40px;
+        }
+
+        .timetable-container {
+            max-width: 1000px;
+            margin: auto;
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            color: #0878b8;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 750px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background: #0878b8;
+            color: white;
+        }
+
+        td {
+            background: #fafafa;
+        }
+
+        td:first-child {
+            font-weight: bold;
+            background: #f2f6fa;
+        }
+
+        tr:hover td {
+            background: #eef7fc;
+        }
+
+        .back-button {
+            margin-top: 25px;
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #0878b8;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            background: #055d8e;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="timetable-container">
+
+        <h1>📅 Timetable</h1>
+
+        <p class="subtitle">
+            Weekly class timetable
+        </p>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <tr>
+                    <th>Day</th>
+                    <th>9:00 - 10:00</th>
+                    <th>10:00 - 11:00</th>
+                    <th>11:15 - 12:15</th>
+                    <th>12:15 - 1:15</th>
+                    <th>2:00 - 3:00</th>
+                </tr>
+
+                <tr>
+                    <td>Monday</td>
+                    <td>Advanced Java</td>
+                    <td>Computer Networks</td>
+                    <td>Open Elective</td>
+                    <td>Data Warehouse and Data Mining</td>
+                    <td>Automata Theory and Compiler Design</td>
+                </tr>
+
+                <tr>
+                    <td>Tuesday</td>
+                    <td>Computer Networks</td>
+                    <td>Advanced Java</td>
+                    <td>Automata Theory and Compiler Design</td>
+                    <td>Open Elective</td>
+                    <td>Data Warehouse and Data Mining</td>
+                </tr>
+
+                <tr>
+                    <td>Wednesday</td>
+                    <td>Data Warehouse and Data Mining</td>
+                    <td>Open Elective</td>
+                    <td>Advanced Java</td>
+                    <td>Computer Networks</td>
+                    <td>Automata Theory and Compiler Design</td>
+                </tr>
+
+                <tr>
+                    <td>Thursday</td>
+                    <td>Automata Theory and Compiler Design</td>
+                    <td>Computer Networks</td>
+                    <td>Data Warehouse and Data Mining</td>
+                    <td>Advanced Java</td>
+                    <td>Open Elective</td>
+                </tr>
+
+                <tr>
+                    <td>Friday</td>
+                    <td>Open Elective</td>
+                    <td>Data Warehouse and Data Mining</td>
+                    <td>Computer Networks</td>
+                    <td>Automata Theory and Compiler Design</td>
+                    <td>Advanced Java</td>
+                </tr>
+
+            </table>
+
+        </div>
+
+        <button
+            class="back-button"
+            onclick="window.location.href='dashboard.html'">
+
+            ← Back to Dashboard
+
+        </button>
+
+    </div>
+
+</body>
+
+</html>
