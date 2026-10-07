@@ -27,7 +27,9 @@
             margin: auto;
         }
 
-        /* Header */
+        /* ===============================
+           HEADER
+        =============================== */
 
         .header {
             background: white;
@@ -66,13 +68,14 @@
         }
 
 
-        /* Statistics */
+        /* ===============================
+           STATISTICS
+        =============================== */
 
         .stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 18px;
-
             margin-bottom: 25px;
         }
 
@@ -103,7 +106,9 @@
         }
 
 
-        /* History */
+        /* ===============================
+           CARDS
+        =============================== */
 
         .history-card {
             background: white;
@@ -112,7 +117,14 @@
             border-radius: 16px;
 
             box-shadow: 0 8px 25px rgba(0,0,0,0.10);
+
+            margin-bottom: 25px;
         }
+
+
+        /* ===============================
+           SECTION HEADER
+        =============================== */
 
         .history-header {
             display: flex;
@@ -144,7 +156,66 @@
         }
 
 
-        /* Table */
+        /* ===============================
+           ADD STUDENT FORM
+        =============================== */
+
+        .student-form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .student-form input {
+            width: 100%;
+
+            padding: 13px 14px;
+
+            border: 1px solid #ccc;
+            border-radius: 8px;
+
+            font-size: 15px;
+
+            outline: none;
+        }
+
+        .student-form input:focus {
+            border-color: #0878b8;
+            box-shadow: 0 0 0 2px rgba(8,120,184,0.10);
+        }
+
+        .add-student-btn {
+            grid-column: span 2;
+
+            background: #0878b8;
+            color: white;
+
+            border: none;
+
+            padding: 13px;
+
+            border-radius: 8px;
+
+            font-size: 16px;
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .add-student-btn:hover {
+            background: #055d8e;
+        }
+
+        #studentMessage {
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+
+        /* ===============================
+           TABLE
+        =============================== */
 
         .table-container {
             overflow-x: auto;
@@ -158,12 +229,15 @@
         th {
             background: #0878b8;
             color: white;
+
             padding: 14px;
+
             text-align: left;
         }
 
         td {
             padding: 14px;
+
             border-bottom: 1px solid #ddd;
         }
 
@@ -178,7 +252,33 @@
         }
 
 
-        /* Mobile */
+        /* ===============================
+           DELETE BUTTON
+        =============================== */
+
+        .delete-btn {
+            background: #d9534f;
+            color: white;
+
+            border: none;
+
+            padding: 7px 12px;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+        }
+
+        .delete-btn:hover {
+            background: #b52b27;
+        }
+
+
+        /* ===============================
+           MOBILE
+        =============================== */
 
         @media (max-width: 700px) {
 
@@ -209,6 +309,14 @@
                 width: 100%;
             }
 
+            .student-form {
+                grid-template-columns: 1fr;
+            }
+
+            .add-student-btn {
+                grid-column: span 1;
+            }
+
             th,
             td {
                 padding: 10px;
@@ -225,162 +333,96 @@
 <body>
 
 
-    <div class="admin-container">
+<div class="admin-container">
 
 
-        <!-- HEADER -->
+    <!-- ===============================
+         HEADER
+    =============================== -->
 
-        <div class="header">
+    <div class="header">
 
-            <div>
+        <div>
 
-                <h1>🛡️ BVC Admin Dashboard</h1>
+            <h1>
+                🛡️ BVC Admin Dashboard
+            </h1>
 
-                <p>
-                    Student Login Monitoring System
-                </p>
+            <p>
+                Student Management & Login Monitoring System
+            </p>
 
+        </div>
+
+
+        <button
+            class="logout-btn"
+            onclick="adminLogout()">
+
+            🚪 Admin Logout
+
+        </button>
+
+    </div>
+
+
+
+    <!-- ===============================
+         STATISTICS
+    =============================== -->
+
+    <div class="stats">
+
+
+        <div class="stat-card">
+
+            <div class="icon">
+                🔢
             </div>
 
+            <strong id="totalLogins">
+                0
+            </strong>
 
-            <button
-                class="logout-btn"
-                onclick="adminLogout()">
-
-                🚪 Admin Logout
-
-            </button>
+            <span>
+                Total Logins
+            </span>
 
         </div>
 
 
 
-        <!-- STATISTICS -->
+        <div class="stat-card">
 
-        <div class="stats">
-
-
-            <div class="stat-card">
-
-                <div class="icon">
-                    🔢
-                </div>
-
-                <strong id="totalLogins">
-                    0
-                </strong>
-
-                <span>
-                    Total Logins
-                </span>
-
+            <div class="icon">
+                👨‍🎓
             </div>
 
+            <strong id="uniqueStudents">
+                0
+            </strong>
 
-
-            <div class="stat-card">
-
-                <div class="icon">
-                    👨‍🎓
-                </div>
-
-                <strong id="uniqueStudents">
-                    0
-                </strong>
-
-                <span>
-                    Unique Students
-                </span>
-
-            </div>
-
-
-
-            <div class="stat-card">
-
-                <div class="icon">
-                    🕐
-                </div>
-
-                <strong id="latestLogin">
-                    --
-                </strong>
-
-                <span>
-                    Latest Login
-                </span>
-
-            </div>
-
+            <span>
+                Unique Students
+            </span>
 
         </div>
 
 
 
-        <!-- LOGIN HISTORY -->
+        <div class="stat-card">
 
-        <div class="history-card">
-
-
-            <div class="history-header">
-
-                <h2>
-                    📋 Login History
-                </h2>
-
-
-                <button
-                    class="refresh-btn"
-                    onclick="loadLoginHistory()">
-
-                    🔄 Refresh
-
-                </button>
-
+            <div class="icon">
+                🕐
             </div>
 
+            <strong id="latestLogin">
+                --
+            </strong>
 
-
-            <div class="table-container">
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-
-                            <th>ID</th>
-
-                            <th>Student ID</th>
-
-                            <th>Login Date</th>
-
-                            <th>Login Time</th>
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody id="loginTable">
-
-                        <tr>
-
-                            <td
-                                colspan="4"
-                                class="no-data">
-
-                                Loading login history...
-
-                            </td>
-
-                        </tr>
-
-                    </tbody>
-
-                </table>
-
-            </div>
+            <span>
+                Latest Login
+            </span>
 
         </div>
 
@@ -389,56 +431,573 @@
 
 
 
-    <script>
+    <!-- ===============================
+         ADD STUDENT
+    =============================== -->
+
+    <div class="history-card">
+
+        <div class="history-header">
+
+            <h2>
+                ➕ Add Student
+            </h2>
+
+        </div>
 
 
-        // ===============================
-        // LOAD LOGIN HISTORY
-        // ===============================
+        <form
+            id="studentForm"
+            class="student-form">
 
-        async function loadLoginHistory() {
 
-            const table =
-                document.getElementById("loginTable");
+            <input
+                type="text"
+                id="studentId"
+                placeholder="Student ID"
+                required>
 
-            const totalLogins =
-                document.getElementById("totalLogins");
 
-            const uniqueStudents =
-                document.getElementById("uniqueStudents");
+            <input
+                type="text"
+                id="studentName"
+                placeholder="Student Name"
+                required>
 
-            const latestLogin =
-                document.getElementById("latestLogin");
+
+            <input
+                type="text"
+                id="studentBranch"
+                placeholder="Branch (Example: IT)"
+                required>
+
+
+            <input
+                type="text"
+                id="studentYear"
+                placeholder="Year (Example: 3rd)"
+                required>
+
+
+            <input
+                type="text"
+                id="studentSection"
+                placeholder="Section (Example: A)"
+                required>
+
+
+            <input
+                type="password"
+                id="studentPassword"
+                placeholder="Student Password"
+                required>
+
+
+            <button
+                type="submit"
+                class="add-student-btn">
+
+                ➕ Add Student
+
+            </button>
+
+
+        </form>
+
+
+        <p id="studentMessage"></p>
+
+    </div>
+
+
+
+    <!-- ===============================
+         STUDENT LIST
+    =============================== -->
+
+    <div class="history-card">
+
+
+        <div class="history-header">
+
+            <h2>
+                👨‍🎓 Student List
+            </h2>
+
+
+            <button
+                class="refresh-btn"
+                onclick="loadStudents()">
+
+                🔄 Refresh
+
+            </button>
+
+        </div>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            ID
+                        </th>
+
+                        <th>
+                            Student ID
+                        </th>
+
+                        <th>
+                            Name
+                        </th>
+
+                        <th>
+                            Branch
+                        </th>
+
+                        <th>
+                            Year
+                        </th>
+
+                        <th>
+                            Section
+                        </th>
+
+                        <th>
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="studentTable">
+
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            class="no-data">
+
+                            Loading students...
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ===============================
+         LOGIN HISTORY
+    =============================== -->
+
+    <div class="history-card">
+
+
+        <div class="history-header">
+
+            <h2>
+                📋 Login History
+            </h2>
+
+
+            <button
+                class="refresh-btn"
+                onclick="loadLoginHistory()">
+
+                🔄 Refresh
+
+            </button>
+
+        </div>
+
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            ID
+                        </th>
+
+                        <th>
+                            Student ID
+                        </th>
+
+                        <th>
+                            Login Date
+                        </th>
+
+                        <th>
+                            Login Time
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="loginTable">
+
+                    <tr>
+
+                        <td
+                            colspan="4"
+                            class="no-data">
+
+                            Loading login history...
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+// ===============================
+// ADMIN LOGOUT
+// ===============================
+
+function adminLogout() {
+
+    localStorage.removeItem("adminToken");
+
+    window.location.href =
+        "admin-login.html";
+
+}
+
+
+
+// ===============================
+// CHECK ADMIN LOGIN
+// ===============================
+
+function getAdminToken() {
+
+    const token =
+        localStorage.getItem("adminToken");
+
+    if (!token) {
+
+        alert("Admin login required!");
+
+        window.location.href =
+            "admin-login.html";
+
+        return null;
+
+    }
+
+    return token;
+
+}
+
+
+
+// ===============================
+// LOAD LOGIN HISTORY
+// ===============================
+
+async function loadLoginHistory() {
+
+    const table =
+        document.getElementById("loginTable");
+
+    const totalLogins =
+        document.getElementById("totalLogins");
+
+    const uniqueStudents =
+        document.getElementById("uniqueStudents");
+
+    const latestLogin =
+        document.getElementById("latestLogin");
+
+
+    const token = getAdminToken();
+
+    if (!token) return;
+
+
+    try {
+
+        const response =
+            await fetch("/api/logins", {
+
+                headers: {
+                    "Authorization": token
+                }
+
+            });
+
+
+        if (response.status === 403) {
+
+            localStorage.removeItem(
+                "adminToken"
+            );
+
+            alert("Admin session expired!");
+
+            window.location.href =
+                "admin-login.html";
+
+            return;
+
+        }
+
+
+        const logins =
+            await response.json();
+
+
+        // Total logins
+
+        totalLogins.textContent =
+            logins.length;
+
+
+        // Unique students
+
+        const uniqueIds =
+            new Set(
+                logins.map(
+                    login => login.student_id
+                )
+            );
+
+        uniqueStudents.textContent =
+            uniqueIds.size;
+
+
+        // Latest login
+
+        if (logins.length > 0) {
+
+            latestLogin.textContent =
+                logins[0].login_time;
+
+        } else {
+
+            latestLogin.textContent =
+                "--";
+
+        }
+
+
+        // Clear table
+
+        table.innerHTML = "";
+
+
+        if (logins.length === 0) {
+
+            table.innerHTML = `
+
+                <tr>
+
+                    <td
+                        colspan="4"
+                        class="no-data">
+
+                        No login history found.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        // Add rows
+
+        logins.forEach(login => {
+
+            const row =
+                document.createElement("tr");
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${login.id}
+                </td>
+
+                <td>
+                    ${login.student_id}
+                </td>
+
+                <td>
+                    ${login.login_date}
+                </td>
+
+                <td>
+                    ${login.login_time}
+                </td>
+
+            `;
+
+
+            table.appendChild(row);
+
+        });
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        table.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="4"
+                    class="no-data">
+
+                    Unable to load login history.
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+}
+
+
+
+// ===============================
+// ADD STUDENT
+// ===============================
+
+document
+    .getElementById("studentForm")
+    .addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            const token =
+                getAdminToken();
+
+            if (!token) return;
+
+
+            const studentData = {
+
+                studentId:
+                    document.getElementById(
+                        "studentId"
+                    ).value.trim(),
+
+                name:
+                    document.getElementById(
+                        "studentName"
+                    ).value.trim(),
+
+                branch:
+                    document.getElementById(
+                        "studentBranch"
+                    ).value.trim(),
+
+                year:
+                    document.getElementById(
+                        "studentYear"
+                    ).value.trim(),
+
+                section:
+                    document.getElementById(
+                        "studentSection"
+                    ).value.trim(),
+
+                password:
+                    document.getElementById(
+                        "studentPassword"
+                    ).value
+
+            };
+
+
+            const message =
+                document.getElementById(
+                    "studentMessage"
+                );
+
+
+            message.textContent =
+                "Adding student...";
+
+            message.style.color =
+                "#0878b8";
 
 
             try {
 
-                const token =
-                    localStorage.getItem("adminToken");
-
-
-                if (!token) {
-
-                    alert("Admin login required!");
-
-                    window.location.href =
-                        "admin-login.html";
-
-                    return;
-
-                }
-
-
                 const response =
-                    await fetch("/api/logins", {
+                    await fetch(
+                        "/api/students",
+                        {
 
-                        headers: {
+                            method: "POST",
 
-                            "Authorization": token
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json",
+
+                                "Authorization":
+                                    token
+
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    studentData
+                                )
 
                         }
-
-                    });
+                    );
 
 
                 if (response.status === 403) {
@@ -447,7 +1006,9 @@
                         "adminToken"
                     );
 
-                    alert("Admin session expired!");
+                    alert(
+                        "Admin session expired!"
+                    );
 
                     window.location.href =
                         "admin-login.html";
@@ -457,4 +1018,323 @@
                 }
 
 
-                const
+                const data =
+                    await response.json();
+
+
+                if (data.success) {
+
+                    message.textContent =
+                        "✅ " + data.message;
+
+                    message.style.color =
+                        "green";
+
+
+                    document
+                        .getElementById(
+                            "studentForm"
+                        )
+                        .reset();
+
+
+                    loadStudents();
+
+                } else {
+
+                    message.textContent =
+                        "❌ " + data.message;
+
+                    message.style.color =
+                        "red";
+
+                }
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                message.textContent =
+                    "❌ Server error. Please try again.";
+
+                message.style.color =
+                    "red";
+
+            }
+
+        }
+    );
+
+
+
+// ===============================
+// LOAD STUDENTS
+// ===============================
+
+async function loadStudents() {
+
+    const table =
+        document.getElementById(
+            "studentTable"
+        );
+
+
+    const token =
+        getAdminToken();
+
+    if (!token) return;
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/students",
+                {
+
+                    headers: {
+                        "Authorization": token
+                    }
+
+                }
+            );
+
+
+        if (response.status === 403) {
+
+            localStorage.removeItem(
+                "adminToken"
+            );
+
+            alert("Admin session expired!");
+
+            window.location.href =
+                "admin-login.html";
+
+            return;
+
+        }
+
+
+        const students =
+            await response.json();
+
+
+        table.innerHTML = "";
+
+
+        if (students.length === 0) {
+
+            table.innerHTML = `
+
+                <tr>
+
+                    <td
+                        colspan="7"
+                        class="no-data">
+
+                        No students added yet.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        students.forEach(student => {
+
+            const row =
+                document.createElement("tr");
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${student.id}
+                </td>
+
+                <td>
+                    ${student.student_id}
+                </td>
+
+                <td>
+                    ${student.name}
+                </td>
+
+                <td>
+                    ${student.branch}
+                </td>
+
+                <td>
+                    ${student.year}
+                </td>
+
+                <td>
+                    ${student.section}
+                </td>
+
+                <td>
+
+                    <button
+                        class="delete-btn"
+                        onclick="deleteStudent('${student.student_id}')">
+
+                        🗑️ Delete
+
+                    </button>
+
+                </td>
+
+            `;
+
+
+            table.appendChild(row);
+
+        });
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        table.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="7"
+                    class="no-data">
+
+                    Unable to load students.
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+}
+
+
+
+// ===============================
+// DELETE STUDENT
+// ===============================
+
+async function deleteStudent(studentId) {
+
+    const confirmDelete =
+        confirm(
+            "Are you sure you want to delete Student ID: "
+            + studentId
+            + "?"
+        );
+
+
+    if (!confirmDelete) return;
+
+
+    const token =
+        getAdminToken();
+
+    if (!token) return;
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/students/"
+                + encodeURIComponent(studentId),
+                {
+
+                    method: "DELETE",
+
+                    headers: {
+                        "Authorization": token
+                    }
+
+                }
+            );
+
+
+        if (response.status === 403) {
+
+            localStorage.removeItem(
+                "adminToken"
+            );
+
+            alert("Admin session expired!");
+
+            window.location.href =
+                "admin-login.html";
+
+            return;
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if (data.success) {
+
+            alert(
+                "✅ Student deleted successfully!"
+            );
+
+            loadStudents();
+
+        } else {
+
+            alert(
+                "❌ " + data.message
+            );
+
+        }
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Server error. Please try again."
+        );
+
+    }
+
+}
+
+
+
+// ===============================
+// PAGE LOAD
+// ===============================
+
+window.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        loadLoginHistory();
+
+        loadStudents();
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>

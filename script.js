@@ -2,7 +2,7 @@ const form = document.querySelector("form");
 
 
 // ===============================
-// LOGIN
+// STUDENT LOGIN
 // ===============================
 
 if (form) {
@@ -11,21 +11,28 @@ if (form) {
 
         event.preventDefault();
 
-        let studentId = document
-            .querySelector('input[type="text"]')
-            .value
-            .trim();
+        const studentId =
+            document
+                .querySelector('input[type="text"]')
+                .value
+                .trim();
 
-        let password = document
-            .querySelector('input[type="password"]')
-            .value
-            .trim();
+        const password =
+            document
+                .querySelector('input[type="password"]')
+                .value
+                .trim();
 
 
-        // Empty fields check
-        if (studentId === "" || password === "") {
+        // ===============================
+        // EMPTY FIELD CHECK
+        // ===============================
 
-            alert("Please enter Student ID and Password");
+        if (!studentId || !password) {
+
+            alert(
+                "Please enter Student ID and Password"
+            );
 
             return;
         }
@@ -33,47 +40,119 @@ if (form) {
 
         try {
 
-            // Backend ki login request
-            const response = await fetch("/login", {
+            // ===============================
+            // LOGIN REQUEST
+            // ===============================
 
-                method: "POST",
+            const response = await fetch(
+                "/login",
+                {
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                    method: "POST",
 
-                body: JSON.stringify({
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
 
-                    studentId: studentId,
+                    body: JSON.stringify({
 
-                    password: password
+                        studentId:
+                            studentId,
 
-                })
+                        password:
+                            password
 
-            });
+                    })
+
+                }
+            );
 
 
-            const data = await response.json();
+            const data =
+                await response.json();
 
+
+            // ===============================
+            // LOGIN SUCCESS
+            // ===============================
 
             if (data.success) {
 
-                // Student ID save cheyyadam
+                const student =
+                    data.student;
+
+
+                // ===============================
+                // SAVE STUDENT DETAILS
+                // ===============================
+
                 localStorage.setItem(
                     "studentId",
-                    studentId
+                    student.studentId
                 );
 
 
-                alert(data.message);
+                localStorage.setItem(
+                    "studentName",
+                    student.name
+                );
 
 
-                // Dashboard ki velladam
-                window.location.href = "dashboard.html";
+                localStorage.setItem(
+                    "studentBranch",
+                    student.branch
+                );
+
+
+                localStorage.setItem(
+                    "studentYear",
+                    student.year
+                );
+
+
+                localStorage.setItem(
+                    "studentSection",
+                    student.section
+                );
+
+
+                // ===============================
+                // SAVE LOGIN TIME
+                // ===============================
+
+                localStorage.setItem(
+                    "loginDate",
+                    data.loginDate
+                );
+
+
+                localStorage.setItem(
+                    "loginTime",
+                    data.loginTime
+                );
+
+
+                alert(
+                    "Welcome " +
+                    student.name +
+                    "!"
+                );
+
+
+                // ===============================
+                // GO TO DASHBOARD
+                // ===============================
+
+                window.location.href =
+                    "dashboard.html";
 
             } else {
 
-                alert(data.message);
+                alert(
+                    data.message ||
+                    "Invalid Student ID or Password"
+                );
 
             }
 
@@ -92,14 +171,50 @@ if (form) {
 }
 
 
+
 // ===============================
 // LOGOUT
 // ===============================
 
 function logout() {
 
-    alert("You have been logged out!");
+    // Remove student session data
 
-    window.location.href = "index.html";
+    localStorage.removeItem(
+        "studentId"
+    );
+
+    localStorage.removeItem(
+        "studentName"
+    );
+
+    localStorage.removeItem(
+        "studentBranch"
+    );
+
+    localStorage.removeItem(
+        "studentYear"
+    );
+
+    localStorage.removeItem(
+        "studentSection"
+    );
+
+    localStorage.removeItem(
+        "loginDate"
+    );
+
+    localStorage.removeItem(
+        "loginTime"
+    );
+
+
+    alert(
+        "You have been logged out!"
+    );
+
+
+    window.location.href =
+        "index.html";
 
 }
