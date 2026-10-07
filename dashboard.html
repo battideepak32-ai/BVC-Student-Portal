@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,7 +23,7 @@
          HEADER
     ========================= -->
 
-    <div class="dashboard-header">
+    <header class="dashboard-header">
 
         <div class="college-brand">
 
@@ -32,11 +31,11 @@
                 src="images/college-logo.png"
                 alt="BVC College Logo">
 
-            <div>
+            <div class="brand-text">
 
                 <h1>BVC Student Dashboard</h1>
 
-                <p>Welcome to BVC Student Portal</p>
+                <p>Student Portal</p>
 
             </div>
 
@@ -58,36 +57,44 @@
 
         </div>
 
-    </div>
+    </header>
 
 
     <!-- =========================
-         WELCOME
+         WELCOME CARD
     ========================= -->
 
-    <div class="welcome-card">
+    <section class="welcome-card">
 
-        <h2>
-            👋 Welcome,
-            <span id="welcomeName">
-                Student
-            </span>!
-        </h2>
+        <div>
 
-        <p>
-            Access your academic information,
-            attendance, results and timetable from
-            your student portal.
-        </p>
+            <span class="welcome-label">
+                STUDENT PORTAL
+            </span>
 
-    </div>
+            <h2>
+                👋 Welcome,
+                <span id="welcomeName">
+                    Student
+                </span>!
+            </h2>
+
+            <p>
+                Access your academic information,
+                attendance, results and timetable
+                from one place.
+            </p>
+
+        </div>
+
+    </section>
 
 
     <!-- =========================
          SUMMARY
     ========================= -->
 
-    <div class="summary-grid">
+    <section class="summary-grid">
 
 
         <div class="summary-card">
@@ -96,13 +103,17 @@
                 📊
             </div>
 
-            <strong id="attendanceValue">
-                --
-            </strong>
+            <div class="summary-content">
 
-            <span>
-                Attendance
-            </span>
+                <strong id="attendanceValue">
+                    --
+                </strong>
+
+                <span>
+                    Attendance
+                </span>
+
+            </div>
 
         </div>
 
@@ -113,13 +124,17 @@
                 📝
             </div>
 
-            <strong id="resultValue">
-                --
-            </strong>
+            <div class="summary-content">
 
-            <span>
-                Latest Result
-            </span>
+                <strong id="resultValue">
+                    --
+                </strong>
+
+                <span>
+                    Latest Result
+                </span>
+
+            </div>
 
         </div>
 
@@ -130,106 +145,184 @@
                 📚
             </div>
 
-            <strong id="subjectValue">
-                --
-            </strong>
+            <div class="summary-content">
 
-            <span>
-                Subjects
-            </span>
+                <strong id="subjectValue">
+                    --
+                </strong>
+
+                <span>
+                    Subjects
+                </span>
+
+            </div>
 
         </div>
 
 
-    </div>
+    </section>
 
 
     <!-- =========================
          QUICK ACCESS
     ========================= -->
 
-    <h2 class="section-title">
-        📌 Quick Access
-    </h2>
+    <section class="quick-access">
+
+        <h2 class="section-title">
+            📌 Quick Access
+        </h2>
+
+        <p class="section-subtitle">
+            Select an option to view your academic information.
+        </p>
 
 
-    <div class="dashboard-menu">
+        <div class="dashboard-menu">
 
 
-        <button
-            onclick="window.location.href='profile.html'">
+            <button
+                type="button"
+                onclick="window.location.href='profile.html'">
 
-            👤
-            <br><br>
-            Student Profile
+                <span class="menu-icon">
+                    👤
+                </span>
 
-        </button>
+                <span class="menu-title">
+                    Student Profile
+                </span>
 
+                <span class="menu-arrow">
+                    →
+                </span>
 
-        <button
-            onclick="window.location.href='subjects.html'">
-
-            📚
-            <br><br>
-            Subjects
-
-        </button>
-
-
-        <button
-            onclick="window.location.href='Attendance.html'">
-
-            📊
-            <br><br>
-            Attendance
-
-        </button>
+            </button>
 
 
-        <button
-            onclick="window.location.href='results.html'">
+            <button
+                type="button"
+                onclick="window.location.href='subjects.html'">
 
-            📝
-            <br><br>
-            Results
+                <span class="menu-icon">
+                    📚
+                </span>
 
-        </button>
+                <span class="menu-title">
+                    Subjects
+                </span>
 
+                <span class="menu-arrow">
+                    →
+                </span>
 
-        <button
-            onclick="window.location.href='timetable.html'">
-
-            📅
-            <br><br>
-            Timetable
-
-        </button>
-
-
-        <button
-            class="logout-btn"
-            onclick="logout()">
-
-            🚪
-            <br><br>
-            Logout
-
-        </button>
+            </button>
 
 
-    </div>
+            <button
+                type="button"
+                onclick="window.location.href='Attendance.html'">
+
+                <span class="menu-icon">
+                    📊
+                </span>
+
+                <span class="menu-title">
+                    Attendance
+                </span>
+
+                <span class="menu-arrow">
+                    →
+                </span>
+
+            </button>
+
+
+            <button
+                type="button"
+                onclick="window.location.href='results.html'">
+
+                <span class="menu-icon">
+                    📝
+                </span>
+
+                <span class="menu-title">
+                    Results
+                </span>
+
+                <span class="menu-arrow">
+                    →
+                </span>
+
+            </button>
+
+
+            <button
+                type="button"
+                onclick="window.location.href='timetable.html'">
+
+                <span class="menu-icon">
+                    📅
+                </span>
+
+                <span class="menu-title">
+                    Timetable
+                </span>
+
+                <span class="menu-arrow">
+                    →
+                </span>
+
+            </button>
+
+
+            <button
+                type="button"
+                class="logout-btn"
+                onclick="logout()">
+
+                <span class="menu-icon">
+                    🚪
+                </span>
+
+                <span class="menu-title">
+                    Logout
+                </span>
+
+                <span class="menu-arrow">
+                    →
+                </span>
+
+            </button>
+
+
+        </div>
+
+    </section>
 
 
     <!-- =========================
          STUDENT INFORMATION
     ========================= -->
 
-    <div class="details-card">
+    <section class="details-card">
 
 
-        <h2>
-            🎓 Student Information
-        </h2>
+        <div class="details-header">
+
+            <div>
+
+                <span class="details-label">
+                    ACADEMIC DETAILS
+                </span>
+
+                <h2>
+                    🎓 Student Information
+                </h2>
+
+            </div>
+
+        </div>
 
 
         <div class="details-grid">
@@ -302,7 +395,24 @@
 
         </div>
 
-    </div>
+    </section>
+
+
+    <!-- =========================
+         FOOTER
+    ========================= -->
+
+    <footer class="dashboard-footer">
+
+        <p>
+            © 2026 BVC Student Portal
+        </p>
+
+        <span>
+            Academic Management System
+        </span>
+
+    </footer>
 
 
 </div>
@@ -459,9 +569,13 @@
     function logout() {
 
         localStorage.removeItem("studentId");
+
         localStorage.removeItem("studentName");
+
         localStorage.removeItem("studentBranch");
+
         localStorage.removeItem("studentYear");
+
         localStorage.removeItem("studentSection");
 
         window.location.href = "index.html";
@@ -474,4 +588,3 @@
 </body>
 
 </html>
-```
