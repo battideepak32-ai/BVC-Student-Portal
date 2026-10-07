@@ -1,27 +1,50 @@
+```css
+/* =========================================
+   RESET
+========================================= */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+
+/* =========================================
+   BODY
+========================================= */
+
 body {
     font-family: Arial, sans-serif;
     background: #f2f6fa;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     min-height: 100vh;
 }
+
+
+/* =========================================
+   LOGIN PAGE
+========================================= */
 
 .login-container {
     background: white;
     width: 400px;
+    max-width: 100%;
     padding: 35px;
     border-radius: 15px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.15);
+
     text-align: center;
     border-top: 6px solid #0878b8;
+
+    margin: 50px auto;
 }
+
+
+/* =========================================
+   LOGIN LOGO
+========================================= */
 
 .logo {
     width: 300px;
@@ -29,236 +52,769 @@ body {
     margin-bottom: 20px;
 }
 
-h2 {
+
+/* =========================================
+   LOGIN HEADING
+========================================= */
+
+.login-container h2 {
+    color: #0878b8;
+    font-size: 26px;
     margin-bottom: 8px;
 }
 
-p {
+
+.login-container p {
     color: #666;
     margin-bottom: 25px;
 }
+
+
+/* =========================================
+   LOGIN FORM
+========================================= */
 
 form {
     text-align: left;
 }
 
+
 label {
     display: block;
     margin: 15px 0 7px;
     font-weight: bold;
+    font-size: 14px;
 }
+
 
 input {
     width: 100%;
     padding: 13px;
+
     border: 1px solid #ccc;
     border-radius: 8px;
+
     font-size: 15px;
+    outline: none;
 }
+
+
+input:focus {
+    border-color: #0878b8;
+}
+
+
+/* =========================================
+   BUTTON
+========================================= */
 
 button {
     width: 100%;
+
     padding: 13px;
     margin-top: 25px;
+
     border: none;
     border-radius: 8px;
+
     background: #0878b8;
     color: white;
+
     font-size: 16px;
     font-weight: bold;
+
     cursor: pointer;
+
+    transition: 0.2s;
 }
+
 
 button:hover {
     background: #055d8e;
+    transform: translateY(-2px);
 }
 
-/* College Brand */
+
+/* =========================================
+   DASHBOARD MAIN
+========================================= */
+
+.dashboard {
+    width: 100%;
+    max-width: 1200px;
+
+    margin: auto;
+
+    padding: 25px;
+}
+
+
+/* =========================================
+   DASHBOARD HEADER
+========================================= */
+
+.dashboard-header {
+    background: white;
+
+    padding: 25px;
+
+    border-radius: 18px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.10);
+
+    margin-bottom: 25px;
+}
+
+
+/* =========================================
+   COLLEGE BRAND
+========================================= */
 
 .college-brand {
     display: flex;
     align-items: center;
+
     gap: 18px;
 }
+
 
 .college-brand img {
     width: 75px;
     height: 75px;
+
     object-fit: contain;
 }
 
+
 .college-brand h1 {
-    margin-bottom: 5px;
+    margin-bottom: 7px;
+
+    color: #0878b8;
+
+    font-size: 28px;
 }
+
 
 .college-brand p {
-    margin-bottom: 0;
-}
-
-/* Professional Login Page */
-
-.login-container h2 {
-    color: #0878b8;
-    font-size: 26px;
-}
-
-.login-container button {
-    transition: 0.2s;
-}
-
-.login-container button:hover {
-    transform: translateY(-2px);
-}
-
-/* Dashboard */
-
-.dashboard {
-    width: 90%;
-    max-width: 900px;
-    background: white;
-    padding: 35px;
-    border-radius: 18px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-}
-
-.dashboard-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-}
-
-.dashboard-header h1 {
-    color: #0878b8;
-    margin-bottom: 8px;
-}
-
-.dashboard-header p {
-    margin: 0;
-}
-
-.student-info {
-    text-align: right;
-    color: #0878b8;
-}
-
-.student-info strong {
-    display: block;
-    font-size: 18px;
-}
-
-.student-info small {
     color: #666;
 }
 
-.dashboard-menu {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
+
+/* =========================================
+   STUDENT INFO
+========================================= */
+
+.student-info {
+    background: #eef8ff;
+
+    padding: 15px 20px;
+
+    border-radius: 12px;
+
+    text-align: right;
 }
 
-.dashboard-menu button {
-    margin-top: 0;
-    padding: 18px;
-    text-align: left;
-    font-size: 17px;
-    transition: 0.2s;
+
+.student-info strong {
+    display: block;
+
+    color: #0878b8;
+
+    font-size: 18px;
+
+    margin-bottom: 5px;
 }
+
+
+.student-info small {
+    color: #555;
+}
+
+
+/* =========================================
+   WELCOME CARD
+========================================= */
+
+.welcome-card {
+    background: linear-gradient(
+        135deg,
+        #0878b8,
+        #055d8e
+    );
+
+    color: white;
+
+    padding: 28px;
+
+    border-radius: 18px;
+
+    margin-bottom: 25px;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+
+.welcome-card h2 {
+    margin-bottom: 8px;
+
+    font-size: 26px;
+}
+
+
+.welcome-card p {
+    opacity: 0.9;
+}
+
+
+/* =========================================
+   SUMMARY GRID
+========================================= */
+
+.summary-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 18px;
+
+    margin-bottom: 25px;
+}
+
+
+/* =========================================
+   SUMMARY CARD
+========================================= */
+
+.summary-card {
+    background: white;
+
+    padding: 22px;
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 6px 20px rgba(0, 0, 0, 0.08);
+
+    text-align: center;
+}
+
+
+.summary-icon {
+    font-size: 35px;
+
+    margin-bottom: 10px;
+}
+
+
+.summary-card strong {
+    display: block;
+
+    font-size: 27px;
+
+    color: #0878b8;
+
+    margin-bottom: 5px;
+}
+
+
+.summary-card span {
+    color: #666;
+
+    font-size: 14px;
+}
+
+
+/* =========================================
+   SECTION TITLE
+========================================= */
+
+.section-title {
+    color: #333;
+
+    margin-bottom: 15px;
+
+    font-size: 22px;
+}
+
+
+/* =========================================
+   DASHBOARD MENU
+========================================= */
+
+.dashboard-menu {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 18px;
+
+    margin-bottom: 25px;
+}
+
+
+.dashboard-menu button {
+    background: white;
+
+    border: none;
+
+    padding: 22px 15px;
+
+    border-radius: 15px;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    color: #333;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 6px 20px rgba(0, 0, 0, 0.08);
+
+    transition: 0.2s;
+
+    margin-top: 0;
+}
+
 
 .dashboard-menu button:hover {
     transform: translateY(-3px);
+
+    box-shadow:
+        0 10px 25px rgba(0, 0, 0, 0.13);
+
+    color: #0878b8;
 }
+
+
+/* =========================================
+   LOGOUT
+========================================= */
 
 .dashboard-menu .logout-btn {
     background: #d9534f;
+
+    color: white;
 }
+
 
 .dashboard-menu .logout-btn:hover {
     background: #b52b27;
+
+    color: white;
 }
 
-/* Mobile Responsive Design */
+
+/* =========================================
+   STUDENT DETAILS
+========================================= */
+
+.details-card {
+    background: white;
+
+    padding: 25px;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.10);
+}
+
+
+.details-card h2 {
+    color: #333;
+
+    margin-bottom: 20px;
+
+    font-size: 22px;
+}
+
+
+/* =========================================
+   DETAILS GRID
+========================================= */
+
+.details-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 15px;
+}
+
+
+/* =========================================
+   DETAIL BOX
+========================================= */
+
+.detail-box {
+    background: #f5faff;
+
+    padding: 16px;
+
+    border-radius: 10px;
+
+    border-left:
+        4px solid #0878b8;
+}
+
+
+.detail-box span {
+    display: block;
+
+    color: #777;
+
+    font-size: 13px;
+
+    margin-bottom: 6px;
+}
+
+
+.detail-box strong {
+    color: #333;
+
+    font-size: 16px;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 800px) {
+
+    .dashboard {
+        padding: 15px;
+    }
+
+
+    .dashboard-header {
+        flex-direction: column;
+
+        gap: 20px;
+
+        text-align: center;
+    }
+
+
+    .student-info {
+        width: 100%;
+
+        text-align: center;
+    }
+
+
+    .summary-grid {
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+
+    .dashboard-menu {
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+
+    .details-grid {
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
 
 @media (max-width: 600px) {
 
     body {
-        padding: 15px;
-        align-items: flex-start;
+        font-size: 14px;
     }
 
-    /* Login Mobile */
+
+    /* LOGIN */
 
     .login-container {
-        width: 100%;
-        max-width: 400px;
-        padding: 25px 20px;
+        width: calc(100% - 20px);
+
+        padding: 22px 16px;
+
+        margin: 20px auto;
+    }
+
+
+    .logo {
+        width: 190px;
+
+        margin-bottom: 15px;
+    }
+
+
+    .login-container h2 {
+        font-size: 20px;
+    }
+
+
+    .login-container p {
+        font-size: 13px;
+
+        margin-bottom: 18px;
+    }
+
+
+    label {
+        font-size: 13px;
+
+        margin: 12px 0 6px;
+    }
+
+
+    input {
+        padding: 10px;
+
+        font-size: 13px;
+    }
+
+
+    .login-container button {
+        padding: 11px;
+
+        font-size: 14px;
+
         margin-top: 20px;
     }
 
-    .logo {
-        width: 220px;
-    }
 
-    .login-container h2 {
-        font-size: 22px;
-    }
-
-    input {
-        padding: 12px;
-        font-size: 14px;
-    }
-
-    button {
-        padding: 12px;
-        font-size: 15px;
-    }
-
-    /* Dashboard Mobile */
+    /* DASHBOARD */
 
     .dashboard {
-        width: 100%;
-        padding: 20px;
-        border-radius: 12px;
-        margin-top: 10px;
+        padding: 10px;
     }
 
+
     .dashboard-header {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
+        padding: 18px 14px;
+
         gap: 15px;
+
+        border-radius: 14px;
     }
+
 
     .college-brand {
         flex-direction: column;
+
+        gap: 8px;
+
         text-align: center;
-        gap: 10px;
     }
+
 
     .college-brand img {
-        width: 65px;
-        height: 65px;
+        width: 55px;
+        height: 55px;
     }
 
-    .dashboard-header h1 {
-        font-size: 23px;
+
+    .college-brand h1 {
+        font-size: 20px;
+
+        margin-bottom: 5px;
     }
 
-    .dashboard-header p {
-        font-size: 14px;
+
+    .college-brand p {
+        font-size: 12px;
     }
+
 
     .student-info {
-        text-align: center;
+        padding: 12px;
+
+        font-size: 13px;
     }
 
-    .dashboard-menu {
+
+    .student-info strong {
+        font-size: 15px;
+    }
+
+
+    .student-info small {
+        font-size: 12px;
+    }
+
+
+    /* WELCOME */
+
+    .welcome-card {
+        padding: 20px;
+
+        border-radius: 14px;
+
+        margin-bottom: 18px;
+    }
+
+
+    .welcome-card h2 {
+        font-size: 20px;
+
+        line-height: 1.4;
+    }
+
+
+    .welcome-card p {
+        font-size: 13px;
+
+        line-height: 1.5;
+    }
+
+
+    /* SUMMARY */
+
+    .summary-grid {
         grid-template-columns: 1fr;
+
         gap: 12px;
     }
 
-    .dashboard-menu button {
-        font-size: 15px;
-        padding: 15px;
+
+    .summary-card {
+        padding: 16px;
     }
+
+
+    .summary-icon {
+        font-size: 28px;
+
+        margin-bottom: 6px;
+    }
+
+
+    .summary-card strong {
+        font-size: 22px;
+    }
+
+
+    .summary-card span {
+        font-size: 13px;
+    }
+
+
+    /* QUICK ACCESS */
+
+    .section-title {
+        font-size: 19px;
+
+        margin-bottom: 12px;
+    }
+
+
+    .dashboard-menu {
+        grid-template-columns: 1fr;
+
+        gap: 10px;
+    }
+
+
+    .dashboard-menu button {
+        padding: 14px;
+
+        font-size: 14px;
+
+        border-radius: 12px;
+    }
+
+
+    /* DETAILS */
+
+    .details-card {
+        padding: 18px;
+
+        border-radius: 14px;
+    }
+
+
+    .details-card h2 {
+        font-size: 19px;
+
+        margin-bottom: 15px;
+    }
+
+
+    .details-grid {
+        grid-template-columns: 1fr;
+
+        gap: 10px;
+    }
+
+
+    .detail-box {
+        padding: 13px;
+    }
+
+
+    .detail-box span {
+        font-size: 12px;
+    }
+
+
+    .detail-box strong {
+        font-size: 14px;
+    }
+
 }
+
+
+/* =========================================
+   VERY SMALL PHONES
+========================================= */
+
+@media (max-width: 380px) {
+
+    .dashboard {
+        padding: 7px;
+    }
+
+
+    .college-brand h1 {
+        font-size: 18px;
+    }
+
+
+    .welcome-card h2 {
+        font-size: 18px;
+    }
+
+
+    .welcome-card p {
+        font-size: 12px;
+    }
+
+
+    .dashboard-menu button {
+        font-size: 13px;
+
+        padding: 12px;
+    }
+
+
+    .details-card h2 {
+        font-size: 17px;
+    }
+
+}
+```

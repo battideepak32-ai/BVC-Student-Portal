@@ -1,9 +1,13 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>BVC Student Dashboard</title>
 
@@ -11,126 +15,463 @@
 
 </head>
 
+
 <body>
 
-    <div class="dashboard">
+<div class="dashboard">
 
-        <div class="dashboard-header">
+    <!-- =========================
+         HEADER
+    ========================= -->
 
-            <div class="college-brand">
+    <div class="dashboard-header">
 
-                <img
-                    src="images/college-logo.png"
-                    alt="BVC College Logo"
-                >
+        <div class="college-brand">
 
-                <div>
+            <img
+                src="images/college-logo.png"
+                alt="BVC College Logo">
 
-                    <h1>BVC Student Dashboard</h1>
+            <div>
 
-                    <p>
-                        Welcome to BVC Student Portal
-                    </p>
+                <h1>BVC Student Dashboard</h1>
 
-                </div>
-
-            </div>
-
-
-            <div class="student-info">
-
-                <strong>Student</strong>
-
-                <small>
-                    ID: <span id="studentId">Loading...</span>
-                </small>
+                <p>Welcome to BVC Student Portal</p>
 
             </div>
 
         </div>
 
 
-        <div class="dashboard-menu">
+        <div class="student-info">
 
-            <button
-                onclick="window.location.href='profile.html'">
+            <strong id="headerStudentName">
+                Student
+            </strong>
 
-                👤 Student Profile
-
-            </button>
-
-
-            <button
-                onclick="window.location.href='subjects.html'">
-
-                📚 Subjects
-
-            </button>
-
-
-            <button
-                onclick="window.location.href='Attendance.html'">
-
-                📊 Attendance
-
-            </button>
-
-
-            <button
-                onclick="window.location.href='results.html'">
-
-                📝 Results
-
-            </button>
-
-
-            <button
-                onclick="window.location.href='timetable.html'">
-
-                📅 Timetable
-
-            </button>
-
-
-            <button
-                class="logout-btn"
-                onclick="logout()">
-
-                🚪 Logout
-
-            </button>
+            <small>
+                ID:
+                <span id="studentId">
+                    Loading...
+                </span>
+            </small>
 
         </div>
 
     </div>
 
 
-    <script src="script.js"></script>
+    <!-- =========================
+         WELCOME
+    ========================= -->
+
+    <div class="welcome-card">
+
+        <h2>
+            👋 Welcome,
+            <span id="welcomeName">
+                Student
+            </span>!
+        </h2>
+
+        <p>
+            Access your academic information,
+            attendance, results and timetable from
+            your student portal.
+        </p>
+
+    </div>
 
 
-    <script>
+    <!-- =========================
+         SUMMARY
+    ========================= -->
 
-        // Login ayina Student ID retrieve cheyyadam
-
-        const savedStudentId =
-            localStorage.getItem("studentId");
+    <div class="summary-grid">
 
 
-        if (savedStudentId) {
+        <div class="summary-card">
 
-            document.getElementById("studentId")
-                .textContent = savedStudentId;
+            <div class="summary-icon">
+                📊
+            </div>
 
-        } else {
+            <strong id="attendanceValue">
+                --
+            </strong>
 
-            // Login lekunda dashboard open chesthe
-            document.getElementById("studentId")
-                .textContent = "Not available";
+            <span>
+                Attendance
+            </span>
 
-        }
+        </div>
 
-    </script>
+
+        <div class="summary-card">
+
+            <div class="summary-icon">
+                📝
+            </div>
+
+            <strong id="resultValue">
+                --
+            </strong>
+
+            <span>
+                Latest Result
+            </span>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-icon">
+                📚
+            </div>
+
+            <strong id="subjectValue">
+                --
+            </strong>
+
+            <span>
+                Subjects
+            </span>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =========================
+         QUICK ACCESS
+    ========================= -->
+
+    <h2 class="section-title">
+        📌 Quick Access
+    </h2>
+
+
+    <div class="dashboard-menu">
+
+
+        <button
+            onclick="window.location.href='profile.html'">
+
+            👤
+            <br><br>
+            Student Profile
+
+        </button>
+
+
+        <button
+            onclick="window.location.href='subjects.html'">
+
+            📚
+            <br><br>
+            Subjects
+
+        </button>
+
+
+        <button
+            onclick="window.location.href='Attendance.html'">
+
+            📊
+            <br><br>
+            Attendance
+
+        </button>
+
+
+        <button
+            onclick="window.location.href='results.html'">
+
+            📝
+            <br><br>
+            Results
+
+        </button>
+
+
+        <button
+            onclick="window.location.href='timetable.html'">
+
+            📅
+            <br><br>
+            Timetable
+
+        </button>
+
+
+        <button
+            class="logout-btn"
+            onclick="logout()">
+
+            🚪
+            <br><br>
+            Logout
+
+        </button>
+
+
+    </div>
+
+
+    <!-- =========================
+         STUDENT INFORMATION
+    ========================= -->
+
+    <div class="details-card">
+
+
+        <h2>
+            🎓 Student Information
+        </h2>
+
+
+        <div class="details-grid">
+
+
+            <div class="detail-box">
+
+                <span>
+                    Student ID
+                </span>
+
+                <strong id="detailStudentId">
+                    --
+                </strong>
+
+            </div>
+
+
+            <div class="detail-box">
+
+                <span>
+                    Name
+                </span>
+
+                <strong id="detailName">
+                    --
+                </strong>
+
+            </div>
+
+
+            <div class="detail-box">
+
+                <span>
+                    Branch
+                </span>
+
+                <strong id="detailBranch">
+                    --
+                </strong>
+
+            </div>
+
+
+            <div class="detail-box">
+
+                <span>
+                    Year
+                </span>
+
+                <strong id="detailYear">
+                    --
+                </strong>
+
+            </div>
+
+
+            <div class="detail-box">
+
+                <span>
+                    Section
+                </span>
+
+                <strong id="detailSection">
+                    --
+                </strong>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<!-- =========================
+     JAVASCRIPT
+========================= -->
+
+<script src="script.js"></script>
+
+
+<script>
+
+    // ==================================
+    // GET STUDENT DATA
+    // ==================================
+
+    const savedStudentId =
+        localStorage.getItem("studentId");
+
+    const savedStudentName =
+        localStorage.getItem("studentName");
+
+    const savedBranch =
+        localStorage.getItem("studentBranch");
+
+    const savedYear =
+        localStorage.getItem("studentYear");
+
+    const savedSection =
+        localStorage.getItem("studentSection");
+
+
+    // ==================================
+    // STUDENT ID
+    // ==================================
+
+    if (savedStudentId) {
+
+        document.getElementById(
+            "studentId"
+        ).textContent =
+            savedStudentId;
+
+
+        document.getElementById(
+            "detailStudentId"
+        ).textContent =
+            savedStudentId;
+
+    }
+    else {
+
+        document.getElementById(
+            "studentId"
+        ).textContent =
+            "Not available";
+
+    }
+
+
+    // ==================================
+    // STUDENT NAME
+    // ==================================
+
+    if (savedStudentName) {
+
+        document.getElementById(
+            "headerStudentName"
+        ).textContent =
+            savedStudentName;
+
+
+        document.getElementById(
+            "welcomeName"
+        ).textContent =
+            savedStudentName;
+
+
+        document.getElementById(
+            "detailName"
+        ).textContent =
+            savedStudentName;
+
+    }
+
+
+    // ==================================
+    // BRANCH
+    // ==================================
+
+    if (savedBranch) {
+
+        document.getElementById(
+            "detailBranch"
+        ).textContent =
+            savedBranch;
+
+    }
+
+
+    // ==================================
+    // YEAR
+    // ==================================
+
+    if (savedYear) {
+
+        document.getElementById(
+            "detailYear"
+        ).textContent =
+            savedYear;
+
+    }
+
+
+    // ==================================
+    // SECTION
+    // ==================================
+
+    if (savedSection) {
+
+        document.getElementById(
+            "detailSection"
+        ).textContent =
+            savedSection;
+
+    }
+
+
+    // ==================================
+    // SUMMARY
+    // ==================================
+
+    document.getElementById(
+        "attendanceValue"
+    ).textContent = "--";
+
+
+    document.getElementById(
+        "resultValue"
+    ).textContent = "--";
+
+
+    document.getElementById(
+        "subjectValue"
+    ).textContent = "--";
+
+
+    // ==================================
+    // LOGOUT
+    // ==================================
+
+    function logout() {
+
+        localStorage.removeItem("studentId");
+        localStorage.removeItem("studentName");
+        localStorage.removeItem("studentBranch");
+        localStorage.removeItem("studentYear");
+        localStorage.removeItem("studentSection");
+
+        window.location.href = "index.html";
+
+    }
+
+</script>
+
 
 </body>
 
 </html>
+```
