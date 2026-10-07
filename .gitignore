@@ -1,0 +1,4 @@
+node_modules/
+bvc_portal.db
+bvc_portal_backup.db
+.env
