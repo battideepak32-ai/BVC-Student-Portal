@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Attendance - BVC</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f6fa;
+            min-height: 100vh;
+            padding: 40px;
+        }
+
+        .attendance-container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            color: #0878b8;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #0878b8;
+            color: white;
+        }
+
+        tr:hover {
+            background: #f2f6fa;
+        }
+
+        .percentage {
+            font-weight: bold;
+        }
+
+        .back-button {
+            margin-top: 25px;
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #0878b8;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            background: #055d8e;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="attendance-container">
+
+        <h1>📊 Attendance</h1>
+
+        <p class="subtitle">
+            Your subject-wise attendance
+        </p>
+
+        <table>
+
+            <tr>
+                <th>Subject</th>
+                <th>Total Classes</th>
+                <th>Present</th>
+                <th>Attendance</th>
+            </tr>
+
+            <tr>
+                <td>Advanced Java</td>
+                <td>40</td>
+                <td>36</td>
+                <td class="percentage">90%</td>
+            </tr>
+
+            <tr>
+                <td>OPen Electrode</td>
+                <td>42</td>
+                <td>35</td>
+                <td class="percentage">83%</td>
+            </tr>
+
+            <tr>
+                <td>Data Warehouse and Data Mining</td>
+                <td>38</td>
+                <td>34</td>
+                <td class="percentage">89%</td>
+            </tr>
+
+            <tr>
+                <td>Automata theory and Compiler Design</td>
+                <td>40</td>
+                <td>32</td>
+                <td class="percentage">80%</td>
+            </tr>
+
+            <tr>
+                <td>Computer Networks</td>
+                <td>35</td>
+                <td>32</td>
+                <td class="percentage">91%</td>
+            </tr>
+
+        </table>
+
+        <button
+            class="back-button"
+            onclick="window.location.href='dashboard.html'">
+
+            ← Back to Dashboard
+
+        </button>
+
+    </div>
+
+</body>
+
+</html>

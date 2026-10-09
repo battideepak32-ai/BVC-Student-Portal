@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Results - BVC</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f6fa;
+            min-height: 100vh;
+            padding: 40px;
+        }
+
+        .results-container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            color: #0878b8;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #0878b8;
+            color: white;
+        }
+
+        tr:hover {
+            background: #f2f6fa;
+        }
+
+        .grade {
+            font-weight: bold;
+        }
+
+        .pass {
+            font-weight: bold;
+        }
+
+        .back-button {
+            margin-top: 25px;
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #0878b8;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            background: #055d8e;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="results-container">
+
+        <h1>📝 Results</h1>
+
+        <p class="subtitle">
+            Your semester examination results
+        </p>
+
+        <table>
+
+            <tr>
+                <th>S.No</th>
+                <th>Subject</th>
+                <th>Marks</th>
+                <th>Grade</th>
+                <th>Status</th>
+            </tr>
+
+            <tr>
+                <td>1</td>
+                <td>Advanced Java</td>
+                <td>88</td>
+                <td class="grade">A</td>
+                <td class="pass">Pass</td>
+            </tr>
+
+            <tr>
+                <td>2</td>
+                <td>Open Elective</td>
+                <td>82</td>
+                <td class="grade">A</td>
+                <td class="pass">Pass</td>
+            </tr>
+
+            <tr>
+                <td>3</td>
+                <td>Data Warehouse and Data Mining</td>
+                <td>91</td>
+                <td class="grade">A+</td>
+                <td class="pass">Pass</td>
+            </tr>
+
+            <tr>
+                <td>4</td>
+                <td>Automata Theory and Compiler Design</td>
+                <td>85</td>
+                <td class="grade">A</td>
+                <td class="pass">Pass</td>
+            </tr>
+
+            <tr>
+                <td>5</td>
+                <td>Computer Networks</td>
+                <td>89</td>
+                <td class="grade">A</td>
+                <td class="pass">Pass</td>
+            </tr>
+
+        </table>
+
+        <button
+            class="back-button"
+            onclick="window.location.href='dashboard.html'">
+
+            ← Back to Dashboard
+
+        </button>
+
+    </div>
+
+</body>
+
+</html>

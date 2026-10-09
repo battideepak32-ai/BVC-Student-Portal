@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BVC Admin Login</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f6fa;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-container {
+
+            width: 400px;
+            max-width: 100%;
+
+            background: white;
+
+            padding: 35px;
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 8px 30px rgba(0, 0, 0, 0.12);
+
+            border-top: 6px solid #0878b8;
+
+            text-align: center;
+        }
+
+        .icon {
+            font-size: 55px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: #0878b8;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        form {
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        input {
+
+            width: 100%;
+
+            padding: 13px;
+
+            margin-bottom: 18px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 8px;
+
+            font-size: 15px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #0878b8;
+        }
+
+        button {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #0878b8;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #055d8e;
+            transform: translateY(-2px);
+        }
+
+        .back-btn {
+
+            margin-top: 12px;
+
+            background: #666;
+        }
+
+        .back-btn:hover {
+            background: #444;
+        }
+
+        @media (max-width: 600px) {
+
+            .login-container {
+                padding: 25px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <div class="login-container">
+
+        <div class="icon">
+            🛡️
+        </div>
+
+        <h1>BVC Admin Login</h1>
+
+        <p class="subtitle">
+            Login to access Student Login History
+        </p>
+
+
+        <form id="adminLoginForm">
+
+            <label for="username">
+                Username
+            </label>
+
+            <input
+                type="text"
+                id="username"
+                placeholder="Enter admin username"
+                required
+            >
+
+
+            <label for="password">
+                Password
+            </label>
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Enter admin password"
+                required
+            >
+
+
+            <button type="submit">
+                🔐 Admin Login
+            </button>
+
+        </form>
+
+
+        <button
+            class="back-btn"
+            onclick="window.location.href='index.html'">
+
+            ← Back to Student Login
+
+        </button>
+
+    </div>
+
+
+    <script>
+
+        const adminForm =
+            document.getElementById("adminLoginForm");
+
+
+        adminForm.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                const username =
+                    document.getElementById("username").value.trim();
+
+                const password =
+                    document.getElementById("password").value.trim();
+
+
+                try {
+
+                    const response = await fetch(
+                        "/admin-login",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                username: username,
+                                password: password
+                            })
+                        }
+                    );
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (data.success) {
+
+                        // Admin token save cheyyadam
+                        localStorage.setItem(
+                            "adminToken",
+                            data.token
+                        );
+
+
+                        alert(data.message);
+
+
+                        // Admin panel ki velladam
+                        window.location.href =
+                            "admin.html";
+
+                    } else {
+
+                        alert(data.message);
+
+                    }
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    alert(
+                        "Server connection failed. Please start the backend."
+                    );
+
+                }
+
+            }
+        );
+
+    </script>
+
+
+</body>
+
+</html>

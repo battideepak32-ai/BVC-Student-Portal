@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BVC Student Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <div class="dashboard">
+
+        <div class="dashboard-header">
+
+            <div class="college-brand">
+
+                <img
+                    src="images/college-logo.png"
+                    alt="BVC College Logo"
+                >
+
+                <div>
+
+                    <h1>BVC Student Dashboard</h1>
+
+                    <p>
+                        Welcome to BVC Student Portal
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="student-info">
+
+                <strong>Student</strong>
+
+                <small>
+                    ID: <span id="studentId">Loading...</span>
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-menu">
+
+            <button
+                onclick="window.location.href='profile.html'">
+
+                👤 Student Profile
+
+            </button>
+
+
+            <button
+                onclick="window.location.href='subjects.html'">
+
+                📚 Subjects
+
+            </button>
+
+
+            <button
+                onclick="window.location.href='Attendance.html'">
+
+                📊 Attendance
+
+            </button>
+
+
+            <button
+                onclick="window.location.href='results.html'">
+
+                📝 Results
+
+            </button>
+
+
+            <button
+                onclick="window.location.href='timetable.html'">
+
+                📅 Timetable
+
+            </button>
+
+
+            <button
+                class="logout-btn"
+                onclick="logout()">
+
+                🚪 Logout
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+
+    <script>
+
+        // Login ayina Student ID retrieve cheyyadam
+
+        const savedStudentId =
+            localStorage.getItem("studentId");
+
+
+        if (savedStudentId) {
+
+            document.getElementById("studentId")
+                .textContent = savedStudentId;
+
+        } else {
+
+            // Login lekunda dashboard open chesthe
+            document.getElementById("studentId")
+                .textContent = "Not available";
+
+        }
+
+    </script>
+
+</body>
+
+</html>
