@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BVC Admin Dashboard</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f6fa;
+            padding: 30px;
+        }
+
+        .admin-container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        /* Header */
+
+        .header {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.10);
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            color: #0878b8;
+            margin-bottom: 6px;
+        }
+
+        .header p {
+            color: #666;
+        }
+
+        .logout-btn {
+            background: #d9534f;
+            color: white;
+            border: none;
+            padding: 11px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background: #b52b27;
+        }
+
+
+        /* Statistics */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+
+            text-align: center;
+        }
+
+        .stat-card .icon {
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card strong {
+            display: block;
+            font-size: 30px;
+            color: #0878b8;
+            margin-bottom: 5px;
+        }
+
+        .stat-card span {
+            color: #666;
+        }
+
+
+        /* History */
+
+        .history-card {
+            background: white;
+            padding: 25px;
+
+            border-radius: 16px;
+
+            box-shadow: 0 8px 25px rgba(0,0,0,0.10);
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+        .history-header h2 {
+            color: #333;
+        }
+
+        .refresh-btn {
+            background: #0878b8;
+            color: white;
+
+            border: none;
+            padding: 11px 18px;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .refresh-btn:hover {
+            background: #055d8e;
+        }
+
+
+        /* Table */
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #0878b8;
+            color: white;
+            padding: 14px;
+            text-align: left;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background: #f5faff;
+        }
+
+        .no-data {
+            text-align: center;
+            color: #777;
+            padding: 30px;
+        }
+
+
+        /* Mobile */
+
+        @media (max-width: 700px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .history-card {
+                padding: 18px;
+            }
+
+            .history-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .refresh-btn {
+                width: 100%;
+            }
+
+            th,
+            td {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <div class="admin-container">
+
+
+        <!-- HEADER -->
+
+        <div class="header">
+
+            <div>
+
+                <h1>🛡️ BVC Admin Dashboard</h1>
+
+                <p>
+                    Student Login Monitoring System
+                </p>
+
+            </div>
+
+
+            <button
+                class="logout-btn"
+                onclick="adminLogout()">
+
+                🚪 Admin Logout
+
+            </button>
+
+        </div>
+
+
+
+        <!-- STATISTICS -->
+
+        <div class="stats">
+
+
+            <div class="stat-card">
+
+                <div class="icon">
+                    🔢
+                </div>
+
+                <strong id="totalLogins">
+                    0
+                </strong>
+
+                <span>
+                    Total Logins
+                </span>
+
+            </div>
+
+
+
+            <div class="stat-card">
+
+                <div class="icon">
+                    👨‍🎓
+                </div>
+
+                <strong id="uniqueStudents">
+                    0
+                </strong>
+
+                <span>
+                    Unique Students
+                </span>
+
+            </div>
+
+
+
+            <div class="stat-card">
+
+                <div class="icon">
+                    🕐
+                </div>
+
+                <strong id="latestLogin">
+                    --
+                </strong>
+
+                <span>
+                    Latest Login
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- LOGIN HISTORY -->
+
+        <div class="history-card">
+
+
+            <div class="history-header">
+
+                <h2>
+                    📋 Login History
+                </h2>
+
+
+                <button
+                    class="refresh-btn"
+                    onclick="loadLoginHistory()">
+
+                    🔄 Refresh
+
+                </button>
+
+            </div>
+
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Student ID</th>
+
+                            <th>Login Date</th>
+
+                            <th>Login Time</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="loginTable">
+
+                        <tr>
+
+                            <td
+                                colspan="4"
+                                class="no-data">
+
+                                Loading login history...
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <script>
+
+
+        // ===============================
+        // LOAD LOGIN HISTORY
+        // ===============================
+
+        async function loadLoginHistory() {
+
+            const table =
+                document.getElementById("loginTable");
+
+            const totalLogins =
+                document.getElementById("totalLogins");
+
+            const uniqueStudents =
+                document.getElementById("uniqueStudents");
+
+            const latestLogin =
+                document.getElementById("latestLogin");
+
+
+            try {
+
+                const token =
+                    localStorage.getItem("adminToken");
+
+
+                if (!token) {
+
+                    alert("Admin login required!");
+
+                    window.location.href =
+                        "admin-login.html";
+
+                    return;
+
+                }
+
+
+                const response =
+                    await fetch("/api/logins", {
+
+                        headers: {
+
+                            "Authorization": token
+
+                        }
+
+                    });
+
+
+                if (response.status === 403) {
+
+                    localStorage.removeItem(
+                        "adminToken"
+                    );
+
+                    alert("Admin session expired!");
+
+                    window.location.href =
+                        "admin-login.html";
+
+                    return;
+
+                }
+
+
+                const
