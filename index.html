@@ -1,37 +1,66 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BVC Student Login</title>
+    <title>BVC Student Portal - Login</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-    <div class="login-container">
+    <main class="login-page">
+        <div class="login-container">
 
-        <img src="images/college-logo.png" 
-             alt="BVC College Logo"
-             class="logo">
+            <div class="logo-wrapper">
+                <img
+                    src="images/college-logo.png"
+                    alt="BVC College Logo"
+                    class="logo"
+                >
+            </div>
 
-        <h2>Student Login</h2>
-        <p>Welcome to BVC Student Portal</p>
+            <h1>BVC Student Portal</h1>
+            <h2>Student Login</h2>
+            <p class="welcome-text">
+                Welcome! Please login to continue.
+            </p>
 
-        <form>
-            <label>Student ID</label>
-            <input type="text" placeholder="Enter Student ID" required>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="studentId">Student ID</label>
+                    <input
+                        type="text"
+                        id="studentId"
+                        name="studentId"
+                        placeholder="Enter Student ID"
+                        required
+                    >
+                </div>
 
-            <label>Password</label>
-            <input type="password" placeholder="Enter Password" required>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter Password"
+                        required
+                    >
+                </div>
 
-            <button type="submit">LOGIN</button>
-        </form>
+                <button type="submit" class="login-btn">
+                    LOGIN
+                </button>
+            </form>
 
-    </div>
+            <footer class="login-footer">
+                © 2026 BVC Student Portal
+            </footer>
 
-</body>
-</html>
-<script src="script.js"></script>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
 </body>
 </html>
