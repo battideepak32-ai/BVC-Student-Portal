@@ -1,3 +1,4 @@
+
 * {
     margin: 0;
     padding: 0;
@@ -5,260 +6,144 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background: #f2f6fa;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    font-family: "Segoe UI", Arial, sans-serif;
     min-height: 100vh;
+    background: linear-gradient(135deg, #eaf1fb, #f8fafc);
+    color: #172b4d;
+}
+
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
 }
 
 .login-container {
-    background: white;
-    width: 400px;
-    padding: 35px;
-    border-radius: 15px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    text-align: center;
-    border-top: 6px solid #0878b8;
+    width: 100%;
+    max-width: 440px;
+    padding: 36px 30px 24px;
+    background: #ffffff;
+    border: 1px solid #dbe4ef;
+    border-radius: 20px;
+    box-shadow: 0 20px 55px rgba(18, 59, 112, 0.12);
+}
+
+.logo-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 22px;
 }
 
 .logo {
-    width: 300px;
-    max-width: 100%;
-    margin-bottom: 20px;
-}
-
-h2 {
-    margin-bottom: 8px;
-}
-
-p {
-    color: #666;
-    margin-bottom: 25px;
-}
-
-form {
-    text-align: left;
-}
-
-label {
-    display: block;
-    margin: 15px 0 7px;
-    font-weight: bold;
-}
-
-input {
-    width: 100%;
-    padding: 13px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 15px;
-}
-
-button {
-    width: 100%;
-    padding: 13px;
-    margin-top: 25px;
-    border: none;
-    border-radius: 8px;
-    background: #0878b8;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-button:hover {
-    background: #055d8e;
-}
-
-/* College Brand */
-
-.college-brand {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-}
-
-.college-brand img {
-    width: 75px;
-    height: 75px;
+    width: 95px;
+    height: 95px;
     object-fit: contain;
 }
 
-.college-brand h1 {
-    margin-bottom: 5px;
+.login-heading {
+    text-align: center;
+    margin-bottom: 28px;
 }
 
-.college-brand p {
-    margin-bottom: 0;
+.login-heading h1 {
+    color: #123b70;
+    font-size: 27px;
+    margin-bottom: 12px;
 }
 
-/* Professional Login Page */
-
-.login-container h2 {
-    color: #0878b8;
-    font-size: 26px;
-}
-
-.login-container button {
-    transition: 0.2s;
-}
-
-.login-container button:hover {
-    transform: translateY(-2px);
-}
-
-/* Dashboard */
-
-.dashboard {
-    width: 90%;
-    max-width: 900px;
-    background: white;
-    padding: 35px;
-    border-radius: 18px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-}
-
-.dashboard-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-}
-
-.dashboard-header h1 {
-    color: #0878b8;
+.login-heading h2 {
+    font-size: 19px;
     margin-bottom: 8px;
 }
 
-.dashboard-header p {
-    margin: 0;
+.login-heading p {
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.6;
 }
 
-.student-info {
-    text-align: right;
-    color: #0878b8;
+.form-group {
+    margin-bottom: 20px;
 }
 
-.student-info strong {
+.form-group label {
     display: block;
-    font-size: 18px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
 }
 
-.student-info small {
-    color: #666;
+.form-group input {
+    width: 100%;
+    min-height: 49px;
+    padding: 13px;
+    border: 1px solid #d5dfeb;
+    border-radius: 9px;
+    font-size: 15px;
+    outline: none;
+    background: #fbfdff;
 }
 
-.dashboard-menu {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
+.form-group input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
-.dashboard-menu button {
-    margin-top: 0;
-    padding: 18px;
-    text-align: left;
-    font-size: 17px;
+.login-btn {
+    width: 100%;
+    min-height: 50px;
+    margin-top: 10px;
+    padding: 13px;
+    border: none;
+    border-radius: 9px;
+    background: linear-gradient(135deg, #123b70, #2563a6);
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
     transition: 0.2s;
 }
 
-.dashboard-menu button:hover {
-    transform: translateY(-3px);
+.login-btn:hover {
+    background: #09264b;
+    transform: translateY(-1px);
 }
 
-.dashboard-menu .logout-btn {
-    background: #d9534f;
+.login-footer {
+    margin-top: 26px;
+    padding-top: 18px;
+    border-top: 1px solid #edf1f6;
+    text-align: center;
 }
 
-.dashboard-menu .logout-btn:hover {
-    background: #b52b27;
+.login-footer p {
+    color: #8491a3;
+    font-size: 12px;
 }
 
-/* Mobile Responsive Design */
-
-@media (max-width: 600px) {
-
-    body {
-        padding: 15px;
-        align-items: flex-start;
+@media (max-width: 480px) {
+    .login-page {
+        padding: 18px 12px;
     }
 
-    /* Login Mobile */
-
     .login-container {
-        width: 100%;
-        max-width: 400px;
-        padding: 25px 20px;
-        margin-top: 20px;
+        padding: 30px 22px 22px;
+        border-radius: 16px;
     }
 
     .logo {
-        width: 220px;
+        width: 82px;
+        height: 82px;
     }
 
-    .login-container h2 {
-        font-size: 22px;
-    }
-
-    input {
-        padding: 12px;
-        font-size: 14px;
-    }
-
-    button {
-        padding: 12px;
-        font-size: 15px;
-    }
-
-    /* Dashboard Mobile */
-
-    .dashboard {
-        width: 100%;
-        padding: 20px;
-        border-radius: 12px;
-        margin-top: 10px;
-    }
-
-    .dashboard-header {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: 15px;
-    }
-
-    .college-brand {
-        flex-direction: column;
-        text-align: center;
-        gap: 10px;
-    }
-
-    .college-brand img {
-        width: 65px;
-        height: 65px;
-    }
-
-    .dashboard-header h1 {
+    .login-heading h1 {
         font-size: 23px;
     }
 
-    .dashboard-header p {
-        font-size: 14px;
-    }
-
-    .student-info {
-        text-align: center;
-    }
-
-    .dashboard-menu {
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
-
-    .dashboard-menu button {
-        font-size: 15px;
-        padding: 15px;
+    .form-group input {
+        font-size: 16px;
     }
 }
