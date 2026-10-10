@@ -282,6 +282,133 @@ body {
     }
 }
 
+/* ==================================
+   BVC PORTAL - PROFESSIONAL PAGE THEME
+================================== */
+
+:root {
+    --bvc-navy: #123b70;
+    --bvc-blue: #1d4f91;
+    --bvc-light: #f1f6fc;
+    --bvc-border: #dbe4ef;
+    --bvc-text: #172b4d;
+    --bvc-muted: #64748b;
+    --bvc-white: #ffffff;
+}
+
+body {
+    color: var(--bvc-text);
+    background: #f3f6fb;
+    line-height: 1.6;
+}
+
+h1, h2, h3 {
+    color: var(--bvc-navy);
+    line-height: 1.3;
+}
+
+button, input, select, textarea {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+/* Shared cards and content sections */
+.profile-container,
+.subjects-container,
+.attendance-container,
+.results-container,
+.timetable-container,
+.page-container,
+.content-card {
+    width: calc(100% - 32px);
+    max-width: 1100px;
+    margin: 28px auto;
+    padding: 26px;
+    background: var(--bvc-white);
+    border: 1px solid var(--bvc-border);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(18, 59, 112, 0.06);
+}
+
+/* Shared tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bvc-white);
+}
+
+th {
+    background: var(--bvc-navy);
+    color: var(--bvc-white);
+    font-weight: 600;
+    text-align: left;
+}
+
+th, td {
+    padding: 13px 15px;
+    border: 1px solid var(--bvc-border);
+}
+
+tbody tr:nth-child(even) {
+    background: #f7faff;
+}
+
+/* Shared form fields */
+input, select, textarea {
+    max-width: 100%;
+    padding: 11px 13px;
+    border: 1px solid #cbd7e6;
+    border-radius: 8px;
+    background: white;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: 2px solid #bfdbfe;
+    border-color: #2563eb;
+}
+
+/* Shared action buttons */
+.page-container button,
+.content-card button,
+.profile-container button,
+.subjects-container button,
+.attendance-container button,
+.results-container button,
+.timetable-container button {
+    padding: 11px 17px;
+    border: none;
+    border-radius: 8px;
+    background: var(--bvc-navy);
+    color: white;
+    font-weight: 600;
+}
+
+@media (max-width: 600px) {
+    .profile-container,
+    .subjects-container,
+    .attendance-container,
+    .results-container,
+    .timetable-container,
+    .page-container,
+    .content-card {
+        width: calc(100% - 24px);
+        margin: 16px auto;
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    table {
+        font-size: 13px;
+    }
+
+    th, td {
+        padding: 9px 8px;
+    }
+}
+
 @media (max-width: 380px) {
     .dashboard-menu {
         grid-template-columns: 1fr;
