@@ -1,12 +1,11 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>BVC Student Portal | Login</title>
-    <link rel="stylesheet" href="style.css">
+    <title>BVC Student Portal Demo</title>
 
     <style>
         * {
@@ -18,7 +17,6 @@
         :root {
             --green-dark: #062b20;
             --green-main: #0b5038;
-            --green-light: #14764f;
             --gold: #d9bd78;
             --white: #ffffff;
             --muted: #b9cbc2;
@@ -28,101 +26,59 @@
             min-height: 100vh;
             font-family: "Segoe UI", Arial, sans-serif;
             background:
-                radial-gradient(
-                    circle at 15% 15%,
-                    rgba(35, 117, 78, 0.3),
-                    transparent 35%
-                ),
-                linear-gradient(
-                    135deg,
-                    #031b15,
-                    #073a29 55%,
-                    #021b15
-                );
+                radial-gradient(circle at 15% 15%,
+                    rgba(35,117,78,.3), transparent 35%),
+                linear-gradient(135deg,
+                    #031b15, #073a29 55%, #021b15);
             color: var(--white);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 28px;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        body::before {
-            content: "";
-            position: fixed;
-            width: 380px;
-            height: 380px;
-            border: 1px solid rgba(217, 189, 120, 0.16);
-            border-radius: 50%;
-            top: -190px;
-            right: -100px;
-            pointer-events: none;
-        }
-
-        body::after {
-            content: "";
-            position: fixed;
-            width: 280px;
-            height: 280px;
-            border: 1px solid rgba(217, 189, 120, 0.12);
-            border-radius: 50%;
-            bottom: -140px;
-            left: -100px;
-            pointer-events: none;
+            padding: 24px;
         }
 
         .login-layout {
             width: 100%;
             max-width: 1050px;
-            min-height: 610px;
+            min-height: 590px;
             display: grid;
             grid-template-columns: 1fr 1fr;
             overflow: hidden;
-            border: 1px solid rgba(217, 189, 120, 0.3);
+            border: 1px solid rgba(217,189,120,.3);
             border-radius: 24px;
-            background: rgba(255, 255, 255, 0.035);
-            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
-            position: relative;
-            z-index: 1;
+            background: rgba(255,255,255,.035);
+            box-shadow: 0 25px 70px rgba(0,0,0,.35);
         }
 
-        /* LEFT BRAND PANEL */
-
         .brand-panel {
-            padding: 48px 42px;
+            padding: 45px 40px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(15, 91, 62, 0.72),
-                    rgba(3, 34, 25, 0.95)
-                );
-            border-right: 1px solid rgba(217, 189, 120, 0.2);
+            background: linear-gradient(145deg,
+                rgba(15,91,62,.72), rgba(3,34,25,.95));
+            border-right: 1px solid rgba(217,189,120,.2);
         }
 
         .brand-logo {
-            width: 100px;
-            height: 100px;
+            width: 95px;
+            height: 95px;
             object-fit: contain;
             padding: 8px;
             background: white;
             border-radius: 18px;
-            margin-bottom: 25px;
+            margin-bottom: 22px;
         }
 
         .brand-name {
-            font-family: Georgia, "Times New Roman", serif;
+            font-family: Georgia, serif;
             font-size: 42px;
             letter-spacing: 3px;
-            color: var(--white);
         }
 
         .brand-subtitle {
             margin-top: 7px;
-            font-size: 15px;
+            font-size: 14px;
             letter-spacing: 2px;
             color: var(--gold);
             text-transform: uppercase;
@@ -144,34 +100,49 @@
         }
 
         .brand-quote {
-            margin-top: 30px;
-            font-family: Georgia, "Times New Roman", serif;
-            font-size: 24px;
+            margin-top: 28px;
+            font-family: Georgia, serif;
+            font-size: 23px;
             line-height: 1.5;
             color: var(--gold);
         }
 
         .brand-footer {
-            margin-top: 50px;
+            margin-top: 40px;
             padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.13);
+            border-top: 1px solid rgba(255,255,255,.13);
             color: var(--muted);
             font-size: 12px;
             line-height: 1.8;
         }
 
-        /* RIGHT LOGIN PANEL */
-
         .login-panel {
-            padding: 48px 42px;
+            padding: 42px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            background: rgba(2, 27, 20, 0.55);
+            background: rgba(2,27,20,.55);
         }
 
         .mobile-logo {
             display: none;
+        }
+
+        .demo-notice {
+            padding: 13px;
+            margin-bottom: 25px;
+            border: 1px solid var(--gold);
+            border-radius: 10px;
+            background: rgba(217,189,120,.1);
+            color: #f4dfaa;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .demo-notice strong {
+            display: block;
+            letter-spacing: 1px;
+            margin-bottom: 3px;
         }
 
         .login-label {
@@ -187,14 +158,13 @@
             font-size: 32px;
             line-height: 1.3;
             margin-bottom: 10px;
-            color: white;
         }
 
         .login-description {
             color: var(--muted);
             font-size: 14px;
             line-height: 1.7;
-            margin-bottom: 30px;
+            margin-bottom: 28px;
         }
 
         .form-group {
@@ -209,22 +179,17 @@
             font-weight: 600;
         }
 
-        .input-wrap {
-            position: relative;
-        }
-
         .input-wrap input {
             width: 100%;
             height: 51px;
             padding: 0 15px;
-            border: 1px solid rgba(198, 220, 207, 0.25);
+            border: 1px solid rgba(198,220,207,.3);
             border-radius: 10px;
-            background: rgba(255, 255, 255, 0.055);
+            background: rgba(255,255,255,.055);
             color: white;
             font-family: inherit;
             font-size: 14px;
             outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
         .input-wrap input::placeholder {
@@ -233,58 +198,14 @@
 
         .input-wrap input:focus {
             border-color: var(--gold);
-            box-shadow: 0 0 0 3px rgba(217, 189, 120, 0.1);
+            box-shadow: 0 0 0 3px rgba(217,189,120,.1);
         }
 
-        .password-input {
-            padding-right: 80px !important;
-        }
-
-        .toggle-password {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            border: none;
-            background: transparent;
-            color: var(--gold);
-            cursor: pointer;
+        .demo-hint {
+            color: var(--muted);
             font-size: 12px;
-            font-weight: 600;
-            padding: 8px;
-        }
-
-        .form-options {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin: 3px 0 25px;
-            font-size: 12px;
-        }
-
-        .remember-option {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #c5d6cc;
-            cursor: pointer;
-        }
-
-        .remember-option input {
-            accent-color: var(--gold);
-            width: 15px;
-            height: 15px;
-        }
-
-        .forgot-link {
-            color: var(--gold);
-            text-decoration: none;
-        }
-
-        .forgot-link:hover {
-            text-decoration: underline;
+            line-height: 1.7;
+            margin-top: 9px;
         }
 
         .login-button {
@@ -292,45 +213,31 @@
             min-height: 52px;
             border: 1px solid var(--gold);
             border-radius: 10px;
-            background: linear-gradient(
-                110deg,
-                #c6a75d,
-                #ead59b
-            );
+            background: linear-gradient(110deg,#c6a75d,#ead59b);
             color: #09271d;
             font-size: 15px;
             font-weight: 800;
-            letter-spacing: 0.4px;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform .2s, box-shadow .2s;
         }
 
         .login-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 22px rgba(217, 189, 120, 0.18);
-        }
-
-        .login-button:active {
-            transform: translateY(0);
+            box-shadow: 0 8px 22px rgba(217,189,120,.18);
         }
 
         .login-help {
             text-align: center;
-            margin-top: 24px;
+            margin-top: 22px;
             font-size: 12px;
             color: var(--muted);
             line-height: 1.8;
         }
 
-        .login-help a {
-            color: var(--gold);
-            text-decoration: none;
-        }
-
         .panel-footer {
-            margin-top: 35px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            margin-top: 30px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(255,255,255,.12);
             text-align: center;
             font-size: 11px;
             line-height: 1.8;
@@ -339,7 +246,7 @@
 
         @media (max-width: 760px) {
             body {
-                padding: 18px;
+                padding: 15px;
             }
 
             .login-layout {
@@ -353,13 +260,13 @@
             }
 
             .login-panel {
-                padding: 35px 28px;
+                padding: 30px 24px;
             }
 
             .mobile-logo {
                 display: block;
                 text-align: center;
-                margin-bottom: 30px;
+                margin-bottom: 25px;
             }
 
             .mobile-logo img {
@@ -373,7 +280,7 @@
             }
 
             .mobile-logo h2 {
-                font-family: Georgia, "Times New Roman", serif;
+                font-family: Georgia, serif;
                 font-size: 27px;
                 letter-spacing: 2px;
             }
@@ -388,43 +295,29 @@
             .login-title {
                 font-size: 28px;
             }
-
-            .panel-footer {
-                margin-top: 27px;
-            }
         }
 
         @media (max-width: 380px) {
-            body {
-                padding: 10px;
-            }
-
             .login-panel {
-                padding: 28px 19px;
+                padding: 25px 17px;
             }
 
             .login-title {
                 font-size: 25px;
-            }
-
-            .form-options {
-                align-items: flex-start;
             }
         }
     </style>
 </head>
 
 <body>
-
     <main class="login-layout">
 
         <section class="brand-panel">
-
             <div>
                 <img
                     class="brand-logo"
                     src="images/college-logo.png"
-                    alt="BVC College Logo"
+                    alt="Logo used in the BVC student portal demo"
                 >
 
                 <h1 class="brand-name">BVC</h1>
@@ -433,9 +326,9 @@
                 <div class="gold-line"></div>
 
                 <p class="brand-message">
-                    Welcome to the BVC Student Portal.
-                    Access your academic information and stay
-                    connected with your educational journey.
+                    Welcome to this student portal demonstration.
+                    Explore a sample academic dashboard created
+                    as part of an educational web development project.
                 </p>
 
                 <p class="brand-quote">
@@ -445,10 +338,9 @@
             </div>
 
             <div class="brand-footer">
-                BVC Engineering College<br>
-                Student Portal · Academic Access
+                Student Web Development Project<br>
+                Demonstration Portal
             </div>
-
         </section>
 
         <section class="login-panel">
@@ -456,123 +348,91 @@
             <div class="mobile-logo">
                 <img
                     src="images/college-logo.png"
-                    alt="BVC College Logo"
+                    alt="Logo used in the portal demo"
                 >
                 <h2>BVC</h2>
-                <p>ENGINEERING COLLEGE</p>
+                <p>STUDENT PORTAL DEMO</p>
             </div>
 
-            <p class="login-label">Student Portal</p>
+            <div class="demo-notice">
+                <strong>STUDENT PROJECT DEMO</strong>
+                This is an educational demonstration, not an
+                official college login. Do not enter real student
+                passwords or confidential information.
+            </div>
 
-            <h2 class="login-title">Welcome Back</h2>
+            <p class="login-label">Demo Portal</p>
+
+            <h2 class="login-title">Welcome!</h2>
 
             <p class="login-description">
-                Sign in using your student credentials to continue.
+                Enter a sample Student ID to explore the demo dashboard.
+                No password is required or collected.
             </p>
 
-            <form id="loginForm">
-
+            <form id="demoLoginForm">
                 <div class="form-group">
-                    <label for="studentId">Student ID</label>
+                    <label for="studentId">Demo Student ID</label>
 
                     <div class="input-wrap">
                         <input
                             type="text"
                             id="studentId"
                             name="studentId"
-                            placeholder="Enter your Student ID"
-                            autocomplete="username"
+                            placeholder="Example: DEMO001"
+                            autocomplete="off"
+                            maxlength="40"
                             required
                         >
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="password">Password</label>
-
-                    <div class="input-wrap">
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            class="password-input"
-                            placeholder="Enter your password"
-                            autocomplete="current-password"
-                            required
-                        >
-
-                        <button
-                            type="button"
-                            class="toggle-password"
-                            id="togglePassword"
-                            aria-label="Show password"
-                            aria-pressed="false"
-                        >
-                            Show
-                        </button>
-                    </div>
-                </div>
-
-                <div class="form-options">
-                    <label class="remember-option">
-                        <input
-                            type="checkbox"
-                            id="rememberMe"
-                        >
-                        Remember me
-                    </label>
-
-                    <a class="forgot-link"
-                       href="mailto:admin@bvc.edu.in">
-                        Need help?
-                    </a>
+                    <p class="demo-hint">
+                        Use a made-up demo ID only. Do not enter
+                        another student's personal information.
+                    </p>
                 </div>
 
                 <button type="submit" class="login-button">
-                    Sign In &nbsp; →
+                    Explore Demo Dashboard →
                 </button>
-
             </form>
 
             <p class="login-help">
-                Having trouble logging in?<br>
-                Contact your college administrator.
+                This demonstration does not authenticate real students
+                or verify college records.
             </p>
 
             <div class="panel-footer">
-                © BVC Engineering College<br>
-                Student Portal
+                Educational Web Development Project<br>
+                Not an Official College Login
             </div>
 
         </section>
-
     </main>
 
     <script>
-        // Password visibility control
-        const passwordInput = document.getElementById("password");
-        const togglePassword = document.getElementById("togglePassword");
+        const demoForm = document.getElementById("demoLoginForm");
+        const studentIdInput = document.getElementById("studentId");
 
-        togglePassword.addEventListener("click", function () {
-            const isHidden = passwordInput.type === "password";
+        demoForm.addEventListener("submit", function (event) {
+            event.preventDefault();
 
-            passwordInput.type = isHidden ? "text" : "password";
-            togglePassword.textContent = isHidden ? "Hide" : "Show";
+            const demoId = studentIdInput.value.trim();
 
-            togglePassword.setAttribute(
-                "aria-label",
-                isHidden ? "Hide password" : "Show password"
-            );
+            if (!demoId) {
+                alert("Please enter a sample Demo Student ID.");
+                return;
+            }
 
-            togglePassword.setAttribute(
-                "aria-pressed",
-                String(isHidden)
-            );
+            // Demo navigation only. This is NOT real authentication.
+            // No password is requested or sent to the server.
+            try {
+                localStorage.setItem("studentId", demoId);
+                window.location.href = "dashboard.html";
+            } catch (error) {
+                alert("Please enable browser storage to explore this demo.");
+            }
         });
     </script>
-
-    <script src="script.js"></script>
-
 </body>
 </html>
-```
