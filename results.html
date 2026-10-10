@@ -1,169 +1,364 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Results - BVC</title>
+    <title>Results | BVC Student Portal</title>
 
     <style>
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        :root {
+            --navy: #123b70;
+            --blue: #245ba5;
+            --light: #f3f6fb;
+            --border: #dce5f0;
+            --text: #172b4d;
+            --muted: #64748b;
+            --white: #ffffff;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: #f2f6fa;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--light);
+            color: var(--text);
             min-height: 100vh;
-            padding: 40px;
+            padding: 30px 16px;
         }
 
         .results-container {
-            max-width: 900px;
+            width: 100%;
+            max-width: 1050px;
             margin: auto;
-            background: white;
-            padding: 35px;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 12px 35px rgba(18, 59, 112, 0.08);
+        }
+
+        .top-bar {
+            height: 7px;
+            background: linear-gradient(90deg, var(--navy), #4b83d1);
+        }
+
+        .page-header {
+            padding: 30px;
+            background: linear-gradient(180deg, #edf4ff, #ffffff);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .eyebrow {
+            display: inline-block;
+            margin-bottom: 10px;
+            color: var(--blue);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
         }
 
         h1 {
-            color: #0878b8;
-            margin-bottom: 10px;
+            color: var(--navy);
+            font-size: 29px;
+            margin-bottom: 8px;
         }
 
         .subtitle {
-            color: #666;
-            margin-bottom: 30px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 15px;
+            margin-top: 24px;
+        }
+
+        .summary-card {
+            padding: 19px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .summary-card p {
+            margin-bottom: 8px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .summary-card strong {
+            color: var(--navy);
+            font-size: 25px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section-title {
+            color: var(--navy);
+            font-size: 19px;
+            margin-bottom: 18px;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 11px;
         }
 
         table {
             width: 100%;
+            min-width: 650px;
             border-collapse: collapse;
+            background: white;
         }
 
         th, td {
-            padding: 15px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
+            padding: 16px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
         }
 
         th {
-            background: #0878b8;
+            background: var(--navy);
             color: white;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
         }
 
-        tr:hover {
-            background: #f2f6fa;
+        tbody tr:nth-child(even) {
+            background: #f7faff;
+        }
+
+        tbody tr:hover {
+            background: #edf4ff;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .marks {
+            color: var(--navy);
+            font-weight: 800;
         }
 
         .grade {
-            font-weight: bold;
+            display: inline-block;
+            min-width: 38px;
+            padding: 5px 9px;
+            text-align: center;
+            border-radius: 6px;
+            background: #dceaff;
+            color: var(--navy);
+            font-weight: 800;
         }
 
         .pass {
-            font-weight: bold;
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: #dcfce7;
+            color: #166534;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .note {
+            margin-top: 18px;
+            padding: 13px 15px;
+            border-radius: 9px;
+            background: #f0f5ff;
+            color: #365477;
+            font-size: 12px;
+            line-height: 1.7;
         }
 
         .back-button {
-            margin-top: 25px;
             width: 100%;
+            min-height: 48px;
+            margin-top: 24px;
             padding: 13px;
             border: none;
-            border-radius: 8px;
-            background: #0878b8;
+            border-radius: 9px;
+            background: var(--navy);
             color: white;
-            font-size: 16px;
-            font-weight: bold;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 700;
             cursor: pointer;
+            transition: 0.2s;
         }
 
         .back-button:hover {
-            background: #055d8e;
+            background: #0a2850;
         }
 
-    </style>
+        .footer {
+            padding: 17px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 12px;
+        }
 
+        @media (max-width: 600px) {
+            body {
+                padding: 14px 9px;
+            }
+
+            .page-header {
+                padding: 23px 17px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            .summary {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .summary-card {
+                padding: 14px 16px;
+            }
+
+            .summary-card strong {
+                font-size: 22px;
+            }
+
+            .content {
+                padding: 20px 13px;
+            }
+
+            th, td {
+                padding: 13px 11px;
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <main class="results-container">
+        <div class="top-bar"></div>
 
-    <div class="results-container">
+        <header class="page-header">
+            <span class="eyebrow">BVC STUDENT PORTAL</span>
 
-        <h1>📝 Results</h1>
+            <h1>📝 Examination Results</h1>
 
-        <p class="subtitle">
-            Your semester examination results
-        </p>
+            <p class="subtitle">
+                View your semester examination marks, grades and results.
+            </p>
 
-        <table>
+            <div class="summary">
+                <div class="summary-card">
+                    <p>TOTAL SUBJECTS</p>
+                    <strong>05</strong>
+                </div>
 
-            <tr>
-                <th>S.No</th>
-                <th>Subject</th>
-                <th>Marks</th>
-                <th>Grade</th>
-                <th>Status</th>
-            </tr>
+                <div class="summary-card">
+                    <p>AVERAGE MARKS</p>
+                    <strong>87%</strong>
+                </div>
 
-            <tr>
-                <td>1</td>
-                <td>Advanced Java</td>
-                <td>88</td>
-                <td class="grade">A</td>
-                <td class="pass">Pass</td>
-            </tr>
+                <div class="summary-card">
+                    <p>RESULT STATUS</p>
+                    <strong>Pass</strong>
+                </div>
+            </div>
+        </header>
 
-            <tr>
-                <td>2</td>
-                <td>Open Elective</td>
-                <td>82</td>
-                <td class="grade">A</td>
-                <td class="pass">Pass</td>
-            </tr>
+        <section class="content">
+            <h2 class="section-title">Subject-wise Results</h2>
 
-            <tr>
-                <td>3</td>
-                <td>Data Warehouse and Data Mining</td>
-                <td>91</td>
-                <td class="grade">A+</td>
-                <td class="pass">Pass</td>
-            </tr>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <th>Subject</th>
+                            <th>Marks / 100</th>
+                            <th>Grade</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
 
-            <tr>
-                <td>4</td>
-                <td>Automata Theory and Compiler Design</td>
-                <td>85</td>
-                <td class="grade">A</td>
-                <td class="pass">Pass</td>
-            </tr>
+                    <tbody>
+                        <tr>
+                            <td>01</td>
+                            <td>Advanced Java</td>
+                            <td class="marks">88</td>
+                            <td><span class="grade">A</span></td>
+                            <td><span class="pass">Pass</span></td>
+                        </tr>
 
-            <tr>
-                <td>5</td>
-                <td>Computer Networks</td>
-                <td>89</td>
-                <td class="grade">A</td>
-                <td class="pass">Pass</td>
-            </tr>
+                        <tr>
+                            <td>02</td>
+                            <td>Open Elective</td>
+                            <td class="marks">82</td>
+                            <td><span class="grade">A</span></td>
+                            <td><span class="pass">Pass</span></td>
+                        </tr>
 
-        </table>
+                        <tr>
+                            <td>03</td>
+                            <td>Data Warehouse and Data Mining</td>
+                            <td class="marks">91</td>
+                            <td><span class="grade">A+</span></td>
+                            <td><span class="pass">Pass</span></td>
+                        </tr>
 
-        <button
-            class="back-button"
-            onclick="window.location.href='dashboard.html'">
+                        <tr>
+                            <td>04</td>
+                            <td>Automata Theory and Compiler Design</td>
+                            <td class="marks">85</td>
+                            <td><span class="grade">A</span></td>
+                            <td><span class="pass">Pass</span></td>
+                        </tr>
 
-            ← Back to Dashboard
+                        <tr>
+                            <td>05</td>
+                            <td>Computer Networks</td>
+                            <td class="marks">89</td>
+                            <td><span class="grade">A</span></td>
+                            <td><span class="pass">Pass</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-        </button>
+            <div class="note">
+                <strong>Note:</strong> These are demonstration results for the
+                website design, not verified college examination records.
+                Replace them with actual results before official use.
+            </div>
 
-    </div>
+            <button class="back-button"
+                    onclick="window.location.href='dashboard.html'">
+                ← Back to Dashboard
+            </button>
+        </section>
 
+        <footer class="footer">
+            © 2026 BVC Student Portal · Examination Results
+        </footer>
+    </main>
 </body>
-
 </html>
+```
