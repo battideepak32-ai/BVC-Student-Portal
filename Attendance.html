@@ -1,159 +1,362 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Attendance - BVC</title>
+    <title>Attendance | BVC Student Portal</title>
 
     <style>
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        :root {
+            --navy: #123b70;
+            --blue: #245ba5;
+            --light: #f3f6fb;
+            --border: #dce5f0;
+            --text: #172b4d;
+            --muted: #64748b;
+            --white: #ffffff;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: #f2f6fa;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--light);
+            color: var(--text);
             min-height: 100vh;
-            padding: 40px;
+            padding: 30px 16px;
         }
 
         .attendance-container {
-            max-width: 800px;
+            width: 100%;
+            max-width: 1050px;
             margin: auto;
-            background: white;
-            padding: 35px;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 12px 35px rgba(18, 59, 112, 0.08);
+        }
+
+        .top-bar {
+            height: 7px;
+            background: linear-gradient(90deg, var(--navy), #4b83d1);
+        }
+
+        .page-header {
+            padding: 30px;
+            background: linear-gradient(180deg, #edf4ff, #ffffff);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .eyebrow {
+            display: inline-block;
+            margin-bottom: 10px;
+            color: var(--blue);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
         }
 
         h1 {
-            color: #0878b8;
-            margin-bottom: 10px;
+            color: var(--navy);
+            font-size: 29px;
+            margin-bottom: 8px;
         }
 
         .subtitle {
-            color: #666;
-            margin-bottom: 30px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 15px;
+            margin-top: 24px;
+        }
+
+        .summary-card {
+            padding: 18px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .summary-card p {
+            margin-bottom: 8px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .summary-card strong {
+            color: var(--navy);
+            font-size: 25px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section-title {
+            color: var(--navy);
+            font-size: 19px;
+            margin-bottom: 18px;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 11px;
         }
 
         table {
             width: 100%;
+            min-width: 620px;
             border-collapse: collapse;
+            background: white;
         }
 
         th, td {
-            padding: 15px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
+            padding: 16px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
         }
 
         th {
-            background: #0878b8;
+            background: var(--navy);
             color: white;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
         }
 
-        tr:hover {
-            background: #f2f6fa;
+        tbody tr:nth-child(even) {
+            background: #f7faff;
+        }
+
+        tbody tr:hover {
+            background: #edf4ff;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
         }
 
         .percentage {
-            font-weight: bold;
+            font-weight: 800;
+            color: var(--navy);
+            white-space: nowrap;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .good {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .note {
+            margin-top: 17px;
+            padding: 13px 15px;
+            border-radius: 9px;
+            background: #f0f5ff;
+            color: #365477;
+            font-size: 12px;
+            line-height: 1.7;
         }
 
         .back-button {
-            margin-top: 25px;
             width: 100%;
+            min-height: 48px;
+            margin-top: 24px;
             padding: 13px;
             border: none;
-            border-radius: 8px;
-            background: #0878b8;
+            border-radius: 9px;
+            background: var(--navy);
             color: white;
-            font-size: 16px;
-            font-weight: bold;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 700;
             cursor: pointer;
+            transition: 0.2s;
         }
 
         .back-button:hover {
-            background: #055d8e;
+            background: #0a2850;
         }
 
-    </style>
+        .footer {
+            padding: 17px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 12px;
+        }
 
+        @media (max-width: 600px) {
+            body {
+                padding: 14px 9px;
+            }
+
+            .page-header {
+                padding: 23px 17px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            .summary {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .summary-card {
+                padding: 14px 16px;
+            }
+
+            .summary-card strong {
+                font-size: 22px;
+            }
+
+            .content {
+                padding: 20px 13px;
+            }
+
+            th, td {
+                padding: 13px 11px;
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <main class="attendance-container">
+        <div class="top-bar"></div>
 
-    <div class="attendance-container">
+        <header class="page-header">
+            <span class="eyebrow">BVC STUDENT PORTAL</span>
+            <h1>📊 My Attendance</h1>
 
-        <h1>📊 Attendance</h1>
+            <p class="subtitle">
+                Review your subject-wise attendance and class participation.
+            </p>
 
-        <p class="subtitle">
-            Your subject-wise attendance
-        </p>
+            <div class="summary">
+                <div class="summary-card">
+                    <p>SUBJECTS</p>
+                    <strong>05</strong>
+                </div>
 
-        <table>
+                <div class="summary-card">
+                    <p>OVERALL ATTENDANCE</p>
+                    <strong>87%</strong>
+                </div>
 
-            <tr>
-                <th>Subject</th>
-                <th>Total Classes</th>
-                <th>Present</th>
-                <th>Attendance</th>
-            </tr>
+                <div class="summary-card">
+                    <p>MINIMUM REQUIRED</p>
+                    <strong>75%</strong>
+                </div>
+            </div>
+        </header>
 
-            <tr>
-                <td>Advanced Java</td>
-                <td>40</td>
-                <td>36</td>
-                <td class="percentage">90%</td>
-            </tr>
+        <section class="content">
+            <h2 class="section-title">Subject-wise Attendance</h2>
 
-            <tr>
-                <td>OPen Electrode</td>
-                <td>42</td>
-                <td>35</td>
-                <td class="percentage">83%</td>
-            </tr>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Total Classes</th>
+                            <th>Present</th>
+                            <th>Attendance</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
 
-            <tr>
-                <td>Data Warehouse and Data Mining</td>
-                <td>38</td>
-                <td>34</td>
-                <td class="percentage">89%</td>
-            </tr>
+                    <tbody>
+                        <tr>
+                            <td>Advanced Java</td>
+                            <td>40</td>
+                            <td>36</td>
+                            <td class="percentage">90%</td>
+                            <td><span class="status good">Good</span></td>
+                        </tr>
 
-            <tr>
-                <td>Automata theory and Compiler Design</td>
-                <td>40</td>
-                <td>32</td>
-                <td class="percentage">80%</td>
-            </tr>
+                        <tr>
+                            <td>Open Electrode</td>
+                            <td>42</td>
+                            <td>35</td>
+                            <td class="percentage">83%</td>
+                            <td><span class="status good">Good</span></td>
+                        </tr>
 
-            <tr>
-                <td>Computer Networks</td>
-                <td>35</td>
-                <td>32</td>
-                <td class="percentage">91%</td>
-            </tr>
+                        <tr>
+                            <td>Data Warehouse and Data Mining</td>
+                            <td>38</td>
+                            <td>34</td>
+                            <td class="percentage">89%</td>
+                            <td><span class="status good">Good</span></td>
+                        </tr>
 
-        </table>
+                        <tr>
+                            <td>Automata Theory and Compiler Design</td>
+                            <td>40</td>
+                            <td>32</td>
+                            <td class="percentage">80%</td>
+                            <td><span class="status good">Good</span></td>
+                        </tr>
 
-        <button
-            class="back-button"
-            onclick="window.location.href='dashboard.html'">
+                        <tr>
+                            <td>Computer Networks</td>
+                            <td>35</td>
+                            <td>32</td>
+                            <td class="percentage">91%</td>
+                            <td><span class="status good">Good</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-            ← Back to Dashboard
+            <div class="note">
+                <strong>Note:</strong> These are demonstration attendance figures
+                for the website design. Replace them with your actual college
+                attendance records before using this page for official purposes.
+            </div>
 
-        </button>
+            <button class="back-button"
+                    onclick="window.location.href='dashboard.html'">
+                ← Back to Dashboard
+            </button>
+        </section>
 
-    </div>
-
+        <footer class="footer">
+            © 2026 BVC Student Portal · Attendance Information
+        </footer>
+    </main>
 </body>
-
 </html>
+```

@@ -1,683 +1,477 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Student Profile - BVC</title>
+    <title>Student Profile | BVC Student Portal</title>
 
     <style>
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        :root {
+            --navy: #123b70;
+            --blue: #245ba5;
+            --light: #f3f6fb;
+            --border: #dce5f0;
+            --text: #172b4d;
+            --muted: #64748b;
+            --white: #ffffff;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: #f2f6fa;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--light);
+            color: var(--text);
             min-height: 100vh;
-            padding: 30px 15px;
+            padding: 30px 16px;
         }
 
         .profile-container {
-            max-width: 800px;
+            width: 100%;
+            max-width: 950px;
             margin: auto;
-            background: white;
-            padding: 35px;
-            border-radius: 18px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 12px 35px rgba(18, 59, 112, 0.09);
         }
 
-        /* Profile Header */
+        .top-bar {
+            height: 8px;
+            background: linear-gradient(90deg, var(--navy), #4b83d1);
+        }
 
         .profile-header {
             text-align: center;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 25px;
-            margin-bottom: 25px;
+            padding: 35px 24px 28px;
+            background: linear-gradient(180deg, #edf4ff, #ffffff);
+            border-bottom: 1px solid var(--border);
         }
 
         .profile-photo {
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
-            background: #e8f4fb;
-            margin: 0 auto 15px;
-
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-
-            font-size: 55px;
-
-            border: 4px solid #0878b8;
+            border-radius: 50%;
+            background: var(--navy);
+            color: white;
+            font-size: 48px;
+            border: 5px solid white;
+            box-shadow: 0 0 0 2px #c8d9f1;
         }
 
         .profile-header h1 {
-            color: #0878b8;
-            margin-bottom: 8px;
+            color: var(--navy);
+            font-size: 29px;
+            margin-bottom: 7px;
         }
 
         .profile-header p {
-            color: #666;
+            color: var(--muted);
+            font-size: 14px;
         }
 
-        /* Section */
+        .student-badge {
+            display: inline-block;
+            margin-top: 14px;
+            padding: 6px 13px;
+            border-radius: 20px;
+            background: #dceaff;
+            color: var(--navy);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .profile-content {
+            padding: 30px;
+        }
 
         .section-title {
-            color: #0878b8;
-            margin-bottom: 15px;
-            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+            color: var(--navy);
+            font-size: 19px;
         }
 
-        /* Profile Information */
+        .section-title::before {
+            content: "";
+            width: 4px;
+            height: 23px;
+            background: var(--blue);
+            border-radius: 5px;
+        }
 
         .profile-info {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 15px;
         }
 
         .info-box {
-            background: #f2f6fa;
-            padding: 16px;
-            border-radius: 10px;
-            border-left: 4px solid #0878b8;
+            min-width: 0;
+            padding: 17px;
+            background: #f8faff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: 0.2s;
+        }
+
+        .info-box:hover {
+            border-color: #a8c4ed;
+            background: #f1f6ff;
         }
 
         .info-box strong {
             display: block;
-            color: #555;
-            font-size: 13px;
-            margin-bottom: 6px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 7px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
         }
 
         .info-box span {
-            color: #222;
-            font-size: 16px;
-            font-weight: bold;
-            word-break: break-word;
+            display: block;
+            color: var(--text);
+            font-size: 15px;
+            font-weight: 650;
+            overflow-wrap: anywhere;
         }
 
-        /* Edit Form */
+        .contact-section {
+            margin-top: 30px;
+        }
 
         #editForm {
             display: none;
-            margin-top: 25px;
-            background: #f2f6fa;
-            padding: 20px;
-            border-radius: 12px;
+            margin-top: 28px;
+            padding: 23px;
+            background: #f8faff;
+            border: 1px solid var(--border);
+            border-radius: 14px;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 17px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 6px;
-            font-weight: bold;
-            color: #444;
+            margin-bottom: 7px;
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 700;
         }
 
         .form-group input {
             width: 100%;
-            padding: 12px;
-
-            border: 1px solid #ccc;
-            border-radius: 8px;
-
+            min-height: 46px;
+            padding: 12px 14px;
+            border: 1px solid #ccd8e8;
+            border-radius: 9px;
+            background: white;
+            color: var(--text);
+            font-family: inherit;
             font-size: 15px;
             outline: none;
         }
 
         .form-group input:focus {
-            border-color: #0878b8;
-            box-shadow: 0 0 5px rgba(8,120,184,0.2);
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(36, 91, 165, 0.12);
         }
 
-        /* Save Button */
-
-        .save-button {
-            width: 100%;
-            padding: 13px;
-
-            border: none;
-            border-radius: 8px;
-
-            background: #0878b8;
-            color: white;
-
-            font-size: 16px;
-            font-weight: bold;
-
-            cursor: pointer;
-
-            transition: 0.2s;
+        .actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 28px;
         }
 
-        .save-button:hover {
-            background: #055d8e;
-            transform: translateY(-2px);
-        }
-
-        /* Edit Button */
-
-        .edit-button,
-        .back-button {
-            width: 100%;
-            padding: 14px;
-
+        .action-button {
+            min-height: 48px;
+            padding: 12px 16px;
             border-radius: 9px;
-
-            font-size: 16px;
-            font-weight: bold;
-
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 700;
             cursor: pointer;
-
             transition: 0.2s;
         }
 
         .edit-button {
-            margin-top: 30px;
-
-            border: 2px solid #0878b8;
-
+            color: var(--navy);
             background: white;
-            color: #0878b8;
+            border: 1px solid var(--navy);
         }
 
         .edit-button:hover {
-            background: #0878b8;
+            background: #edf4ff;
+        }
+
+        .back-button,
+        .save-button {
             color: white;
-
-            transform: translateY(-2px);
+            background: var(--navy);
+            border: 1px solid var(--navy);
         }
 
-        /* Back Button */
-
-        .back-button {
-            margin-top: 12px;
-
-            border: none;
-
-            background: #0878b8;
-            color: white;
+        .back-button:hover,
+        .save-button:hover {
+            background: #0a2850;
+            transform: translateY(-1px);
         }
 
-        .back-button:hover {
-            background: #055d8e;
-
-            transform: translateY(-2px);
+        .save-button {
+            width: 100%;
+            min-height: 46px;
+            border-radius: 9px;
+            font-family: inherit;
+            font-weight: 700;
+            cursor: pointer;
         }
 
-        /* Mobile Responsive */
+        .footer {
+            padding: 17px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 12px;
+        }
 
         @media (max-width: 600px) {
-
             body {
-                padding: 15px;
+                padding: 15px 10px;
             }
 
             .profile-container {
-                padding: 22px 18px;
-                border-radius: 14px;
+                border-radius: 15px;
             }
 
-            .profile-photo {
-                width: 90px;
-                height: 90px;
-
-                font-size: 45px;
+            .profile-header {
+                padding: 27px 15px 23px;
             }
 
             .profile-header h1 {
-                font-size: 23px;
+                font-size: 24px;
             }
 
-            .profile-header p {
-                font-size: 14px;
+            .profile-photo {
+                width: 85px;
+                height: 85px;
+                font-size: 40px;
+            }
+
+            .profile-content {
+                padding: 20px 15px;
             }
 
             .profile-info {
                 grid-template-columns: 1fr;
-                gap: 12px;
+                gap: 11px;
             }
 
             .info-box {
-                padding: 14px;
+                padding: 15px;
             }
 
-            .info-box span {
-                font-size: 15px;
+            .actions {
+                grid-template-columns: 1fr;
             }
 
-            .edit-button,
-            .back-button {
-                font-size: 15px;
+            #editForm {
+                padding: 17px;
             }
-
         }
-
     </style>
-
 </head>
 
-
 <body>
+    <main class="profile-container">
+        <div class="top-bar"></div>
 
-    <div class="profile-container">
-
-
-        <!-- Profile Header -->
-
-        <div class="profile-header">
-
-            <div class="profile-photo">
-                👨‍🎓
-            </div>
-
+        <header class="profile-header">
+            <div class="profile-photo" aria-label="Student avatar">🎓</div>
             <h1>Student Profile</h1>
+            <p>BVC Student Portal · Student Information</p>
+            <div class="student-badge">STUDENT ACCOUNT</div>
+        </header>
 
-            <p>BVC Student Portal</p>
+        <div class="profile-content">
+            <section>
+                <h2 class="section-title">Personal Information</h2>
 
+                <div class="profile-info">
+                    <div class="info-box">
+                        <strong>Full Name</strong>
+                        <span id="displayName">BVC Student</span>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Student ID</strong>
+                        <span>BVC2026001</span>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Course</strong>
+                        <span>B.Sc Computer Science</span>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Academic Year</strong>
+                        <span>2026 - 2027</span>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Year</strong>
+                        <span>1st Year</span>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Semester</strong>
+                        <span>1st Semester</span>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Email Address</strong>
+                        <span id="displayEmail">student@bvc.edu</span>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Phone Number</strong>
+                        <span id="displayPhone">9876543210</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="contact-section">
+                <h2 class="section-title">Contact Information</h2>
+
+                <div class="profile-info">
+                    <div class="info-box">
+                        <strong>College</strong>
+                        <span>BVC College</span>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Address</strong>
+                        <span>Andhra Pradesh, India</span>
+                    </div>
+                </div>
+            </section>
+
+            <section id="editForm">
+                <h2 class="section-title">Edit Your Details</h2>
+
+                <div class="form-group">
+                    <label for="nameInput">Full Name</label>
+                    <input type="text" id="nameInput"
+                           placeholder="Enter your name" autocomplete="name">
+                </div>
+
+                <div class="form-group">
+                    <label for="emailInput">Email Address</label>
+                    <input type="email" id="emailInput"
+                           placeholder="Enter your email" autocomplete="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="phoneInput">Phone Number</label>
+                    <input type="tel" id="phoneInput"
+                           placeholder="Enter your phone number"
+                           autocomplete="tel" maxlength="15">
+                </div>
+
+                <button class="save-button" onclick="saveProfile()">
+                    Save Profile
+                </button>
+            </section>
+
+            <div class="actions">
+                <button class="action-button edit-button" onclick="showEditForm()">
+                    ✏️ Edit Profile
+                </button>
+
+                <button class="action-button back-button"
+                        onclick="window.location.href='dashboard.html'">
+                    ← Back to Dashboard
+                </button>
+            </div>
         </div>
 
-
-        <!-- Personal Information -->
-
-        <h2 class="section-title">
-            👤 Personal Information
-        </h2>
-
-
-        <div class="profile-info">
-
-
-            <div class="info-box">
-
-                <strong>Full Name</strong>
-
-                <span id="displayName">
-                    BVC Student
-                </span>
-
-            </div>
-
-
-            <div class="info-box">
-
-                <strong>Student ID</strong>
-
-                <span>
-                    BVC2026001
-                </span>
-
-            </div>
-
-
-            <div class="info-box">
-
-                <strong>Course</strong>
-
-                <span>
-                    B.Sc Computer Science
-                </span>
-
-            </div>
-
-
-            <div class="info-box">
-
-                <strong>Academic Year</strong>
-
-                <span>
-                    2026 - 2027
-                </span>
-
-            </div>
-
-
-            <div class="info-box">
-
-                <strong>Year</strong>
-
-                <span>
-                    1st Year
-                </span>
-
-            </div>
-
-
-            <div class="info-box">
-
-                <strong>Semester</strong>
-
-                <span>
-                    1st Semester
-                </span>
-
-            </div>
-
-
-            <div class="info-box">
-
-                <strong>Email</strong>
-
-                <span id="displayEmail">
-                    student@bvc.edu
-                </span>
-
-            </div>
-
-
-            <div class="info-box">
-
-                <strong>Phone</strong>
-
-                <span id="displayPhone">
-                    9876543210
-                </span>
-
-            </div>
-
-
-        </div>
-
-
-        <!-- Contact Information -->
-
-        <h2
-            class="section-title"
-            style="margin-top: 30px;"
-        >
-            📍 Contact Information
-        </h2>
-
-
-        <div class="profile-info">
-
-
-            <div class="info-box">
-
-                <strong>College</strong>
-
-                <span>
-                    BVC College
-                </span>
-
-            </div>
-
-
-            <div class="info-box">
-
-                <strong>Address</strong>
-
-                <span>
-                    Andhra Pradesh, India
-                </span>
-
-            </div>
-
-
-        </div>
-
-
-        <!-- Edit Form -->
-
-        <div id="editForm">
-
-
-            <h2 class="section-title">
-                ✏️ Edit Your Details
-            </h2>
-
-
-            <div class="form-group">
-
-                <label>
-                    Full Name
-                </label>
-
-                <input
-                    type="text"
-                    id="nameInput"
-                    value="BVC Student"
-                    placeholder="Enter your name"
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label>
-                    Email
-                </label>
-
-                <input
-                    type="email"
-                    id="emailInput"
-                    value="student@bvc.edu"
-                    placeholder="Enter your email"
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label>
-                    Phone
-                </label>
-
-                <input
-                    type="tel"
-                    id="phoneInput"
-                    value="9876543210"
-                    placeholder="Enter your phone number"
-                >
-
-            </div>
-
-
-            <button
-                class="save-button"
-                onclick="saveProfile()"
-            >
-                💾 Save Profile
-            </button>
-
-
-        </div>
-
-
-        <!-- Edit Profile Button -->
-
-        <button
-            class="edit-button"
-            onclick="showEditForm()"
-        >
-            ✏️ Edit Profile
-        </button>
-
-
-        <!-- Back Button -->
-
-        <button
-            class="back-button"
-            onclick="window.location.href='dashboard.html'"
-        >
-            ← Back to Dashboard
-        </button>
-
-
-    </div>
-
+        <footer class="footer">
+            © 2026 BVC Student Portal · Student Profile
+        </footer>
+    </main>
 
     <script>
+        window.addEventListener("DOMContentLoaded", function () {
+            const fields = [
+                { key: "studentName", display: "displayName", input: "nameInput", fallback: "BVC Student" },
+                { key: "studentEmail", display: "displayEmail", input: "emailInput", fallback: "student@bvc.edu" },
+                { key: "studentPhone", display: "displayPhone", input: "phoneInput", fallback: "9876543210" }
+            ];
 
+            fields.forEach(function (field) {
+                const savedValue = localStorage.getItem(field.key);
+                const value = savedValue || field.fallback;
 
-        // ==========================================
-        // LOAD SAVED PROFILE DATA
-        // ==========================================
-
-        window.onload = function () {
-
-            let savedName =
-                localStorage.getItem("studentName");
-
-            let savedEmail =
-                localStorage.getItem("studentEmail");
-
-            let savedPhone =
-                localStorage.getItem("studentPhone");
-
-
-            // Load Name
-
-            if (savedName) {
-
-                document.getElementById("displayName")
-                    .textContent = savedName;
-
-                document.getElementById("nameInput")
-                    .value = savedName;
-
-            }
-
-
-            // Load Email
-
-            if (savedEmail) {
-
-                document.getElementById("displayEmail")
-                    .textContent = savedEmail;
-
-                document.getElementById("emailInput")
-                    .value = savedEmail;
-
-            }
-
-
-            // Load Phone
-
-            if (savedPhone) {
-
-                document.getElementById("displayPhone")
-                    .textContent = savedPhone;
-
-                document.getElementById("phoneInput")
-                    .value = savedPhone;
-
-            }
-
-        };
-
-
-        // ==========================================
-        // SHOW EDIT FORM
-        // ==========================================
+                document.getElementById(field.display).textContent = value;
+                document.getElementById(field.input).value = value;
+            });
+        });
 
         function showEditForm() {
-
-            document.getElementById("editForm")
-                .style.display = "block";
-
+            const form = document.getElementById("editForm");
+            form.style.display = "block";
+            form.scrollIntoView({ behavior: "smooth", block: "center" });
+            document.getElementById("nameInput").focus();
         }
-
-
-        // ==========================================
-        // SAVE PROFILE
-        // ==========================================
 
         function saveProfile() {
+            const name = document.getElementById("nameInput").value.trim();
+            const email = document.getElementById("emailInput").value.trim();
+            const phone = document.getElementById("phoneInput").value.trim();
 
-
-            let name =
-                document.getElementById("nameInput")
-                .value.trim();
-
-
-            let email =
-                document.getElementById("emailInput")
-                .value.trim();
-
-
-            let phone =
-                document.getElementById("phoneInput")
-                .value.trim();
-
-
-            // Check empty fields
-
-            if (
-                name === "" ||
-                email === "" ||
-                phone === ""
-            ) {
-
-                alert("Please fill all details");
-
+            if (!name || !email || !phone) {
+                alert("Please fill in all details.");
                 return;
-
             }
 
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                alert("Please enter a valid email address.");
+                return;
+            }
 
-            // Update profile on screen
+            if (!/^[0-9+\-\s()]{7,15}$/.test(phone)) {
+                alert("Please enter a valid phone number.");
+                return;
+            }
 
-            document.getElementById("displayName")
-                .textContent = name;
+            document.getElementById("displayName").textContent = name;
+            document.getElementById("displayEmail").textContent = email;
+            document.getElementById("displayPhone").textContent = phone;
 
+            localStorage.setItem("studentName", name);
+            localStorage.setItem("studentEmail", email);
+            localStorage.setItem("studentPhone", phone);
 
-            document.getElementById("displayEmail")
-                .textContent = email;
-
-
-            document.getElementById("displayPhone")
-                .textContent = phone;
-
-
-            // Save data in browser
-
-            localStorage.setItem(
-                "studentName",
-                name
-            );
-
-
-            localStorage.setItem(
-                "studentEmail",
-                email
-            );
-
-
-            localStorage.setItem(
-                "studentPhone",
-                phone
-            );
-
-
-            // Hide edit form
-
-            document.getElementById("editForm")
-                .style.display = "none";
-
-
-            // Success message
-
+            document.getElementById("editForm").style.display = "none";
             alert("Profile updated successfully!");
-
         }
-
-
     </script>
-
-
 </body>
-
 </html>
+```
