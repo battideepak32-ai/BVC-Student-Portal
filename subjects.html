@@ -1,138 +1,315 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Subjects - BVC</title>
+    <title>My Subjects | BVC Student Portal</title>
 
     <style>
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        :root {
+            --navy: #123b70;
+            --blue: #245ba5;
+            --light: #f3f6fb;
+            --border: #dce5f0;
+            --text: #172b4d;
+            --muted: #64748b;
+            --white: #ffffff;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: #f2f6fa;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--light);
+            color: var(--text);
             min-height: 100vh;
-            padding: 40px;
+            padding: 30px 16px;
         }
 
         .subjects-container {
-            max-width: 800px;
+            width: 100%;
+            max-width: 1000px;
             margin: auto;
-            background: white;
-            padding: 35px;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 12px 35px rgba(18, 59, 112, 0.08);
         }
 
-        h1 {
-            color: #0878b8;
+        .top-bar {
+            height: 7px;
+            background: linear-gradient(90deg, var(--navy), #4b83d1);
+        }
+
+        .page-header {
+            padding: 32px;
+            background: linear-gradient(180deg, #edf4ff, #ffffff);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .eyebrow {
+            display: inline-block;
+            color: var(--blue);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
             margin-bottom: 10px;
         }
 
+        h1 {
+            color: var(--navy);
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
         .subtitle {
-            color: #666;
-            margin-bottom: 30px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .subject-count {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 8px 13px;
+            border-radius: 8px;
+            background: #dceaff;
+            color: var(--navy);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .subjects-content {
+            padding: 30px;
+        }
+
+        .section-heading {
+            color: var(--navy);
+            font-size: 19px;
+            margin-bottom: 20px;
+        }
+
+        .subject-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 17px;
         }
 
         .subject {
-            background: #f2f6fa;
-            padding: 18px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            border-left: 5px solid #0878b8;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            min-width: 0;
+            padding: 21px;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            transition: transform 0.2s, box-shadow 0.2s,
+                        border-color 0.2s;
+        }
+
+        .subject:hover {
+            transform: translateY(-3px);
+            border-color: #a9c5ec;
+            box-shadow: 0 8px 22px rgba(18, 59, 112, 0.08);
+        }
+
+        .subject-icon {
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #eaf1fc;
+            border-radius: 12px;
+            font-size: 23px;
+        }
+
+        .subject-details {
+            min-width: 0;
+        }
+
+        .subject-number {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--blue);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1px;
         }
 
         .subject h3 {
-            margin-bottom: 5px;
-            color: #333;
+            color: var(--text);
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+            overflow-wrap: anywhere;
         }
 
-        .subject p {
-            margin: 0;
-            color: #666;
+        .subject-code {
+            display: inline-block;
+            padding: 5px 9px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: #f7faff;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .actions {
+            margin-top: 28px;
+            padding-top: 23px;
+            border-top: 1px solid var(--border);
         }
 
         .back-button {
-            margin-top: 15px;
             width: 100%;
-            padding: 13px;
+            min-height: 49px;
+            padding: 13px 18px;
             border: none;
-            border-radius: 8px;
-            background: #0878b8;
+            border-radius: 9px;
+            background: var(--navy);
             color: white;
-            font-size: 16px;
-            font-weight: bold;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 700;
             cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
         }
 
         .back-button:hover {
-            background: #055d8e;
+            background: #0a2850;
+            transform: translateY(-1px);
         }
 
-    </style>
+        .footer {
+            padding: 17px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 12px;
+        }
 
+        @media (max-width: 650px) {
+            body {
+                padding: 14px 10px;
+            }
+
+            .page-header {
+                padding: 25px 19px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            .subjects-content {
+                padding: 21px 15px;
+            }
+
+            .subject-list {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .subject {
+                padding: 17px;
+            }
+
+            .subject h3 {
+                font-size: 15px;
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <main class="subjects-container">
+        <div class="top-bar"></div>
 
-    <div class="subjects-container">
+        <header class="page-header">
+            <span class="eyebrow">BVC STUDENT PORTAL</span>
 
-        <h1>📚 Subjects</h1>
+            <h1>📚 My Subjects</h1>
 
-        <p class="subtitle">
-            Your current semester subjects
-        </p>
+            <p class="subtitle">
+                View your current semester subjects and their subject codes.
+            </p>
 
+            <span class="subject-count">5 Subjects Listed</span>
+        </header>
 
-        <div class="subject">
-            <h3>1. Advanced Java</h3>
-            <p>Subject Code: ADJ101</p>
-        </div>
+        <section class="subjects-content">
+            <h2 class="section-heading">Current Semester Subjects</h2>
 
+            <div class="subject-list">
+                <article class="subject">
+                    <div class="subject-icon">☕</div>
+                    <div class="subject-details">
+                        <span class="subject-number">SUBJECT 01</span>
+                        <h3>Advanced Java</h3>
+                        <span class="subject-code">Code: ADJ101</span>
+                    </div>
+                </article>
 
-        <div class="subject">
-            <h3>2. Open Electrode</h3>
-            <p>Subject Code: OEL101</p>
-        </div>
+                <article class="subject">
+                    <div class="subject-icon">📘</div>
+                    <div class="subject-details">
+                        <span class="subject-number">SUBJECT 02</span>
+                        <h3>Open Electrode</h3>
+                        <span class="subject-code">Code: OEL101</span>
+                    </div>
+                </article>
 
+                <article class="subject">
+                    <div class="subject-icon">📊</div>
+                    <div class="subject-details">
+                        <span class="subject-number">SUBJECT 03</span>
+                        <h3>Data Warehouse and Data Mining</h3>
+                        <span class="subject-code">Code: DWDM102</span>
+                    </div>
+                </article>
 
-        <div class="subject">
-            <h3>3. Data Warehouse and Data Mining</h3>
-            <p>Subject Code: DWDM102</p>
-        </div>
+                <article class="subject">
+                    <div class="subject-icon">⚙️</div>
+                    <div class="subject-details">
+                        <span class="subject-number">SUBJECT 04</span>
+                        <h3>Automata Theory and Compiler Design</h3>
+                        <span class="subject-code">Code: ATCD101</span>
+                    </div>
+                </article>
 
+                <article class="subject">
+                    <div class="subject-icon">🌐</div>
+                    <div class="subject-details">
+                        <span class="subject-number">SUBJECT 05</span>
+                        <h3>Computer Networks</h3>
+                        <span class="subject-code">Code: CN101</span>
+                    </div>
+                </article>
+            </div>
 
-        <div class="subject">
-            <h3>4. Automata theory and Compiler Design</h3>
-            <p>Subject Code: ATCD101</p>
-        </div>
+            <div class="actions">
+                <button class="back-button"
+                        onclick="window.location.href='dashboard.html'">
+                    ← Back to Dashboard
+                </button>
+            </div>
+        </section>
 
-
-        <div class="subject">
-            <h3>5. Computer Networks</h3>
-            <p>Subject Code: CN101</p>
-        </div>
-
-
-        <button
-            class="back-button"
-            onclick="window.location.href='dashboard.html'">
-
-            ← Back to Dashboard
-
-        </button>
-
-    </div>
-
+        <footer class="footer">
+            © 2026 BVC Student Portal · Academic Information
+        </footer>
+    </main>
 </body>
-
 </html>
+```

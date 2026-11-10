@@ -1,185 +1,352 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Timetable - BVC</title>
+    <title>Class Timetable | BVC Student Portal</title>
 
     <style>
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        :root {
+            --navy: #123b70;
+            --blue: #245ba5;
+            --light: #f3f6fb;
+            --border: #dce5f0;
+            --text: #172b4d;
+            --muted: #64748b;
+            --white: #ffffff;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: #f2f6fa;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--light);
+            color: var(--text);
             min-height: 100vh;
-            padding: 40px;
+            padding: 30px 16px;
         }
 
         .timetable-container {
-            max-width: 1000px;
+            width: 100%;
+            max-width: 1200px;
             margin: auto;
-            background: white;
-            padding: 35px;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 12px 35px rgba(18, 59, 112, 0.08);
+        }
+
+        .top-bar {
+            height: 7px;
+            background: linear-gradient(90deg, var(--navy), #4b83d1);
+        }
+
+        .page-header {
+            padding: 30px;
+            background: linear-gradient(180deg, #edf4ff, #ffffff);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .eyebrow {
+            display: inline-block;
+            margin-bottom: 10px;
+            color: var(--blue);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
         }
 
         h1 {
-            color: #0878b8;
-            margin-bottom: 10px;
+            color: var(--navy);
+            font-size: 29px;
+            margin-bottom: 8px;
         }
 
         .subtitle {
-            color: #666;
-            margin-bottom: 30px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .schedule-info {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .info-chip {
+            padding: 9px 13px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: white;
+            color: var(--navy);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section-title {
+            color: var(--navy);
+            font-size: 19px;
+            margin-bottom: 18px;
         }
 
         .table-wrapper {
+            width: 100%;
             overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 12px;
         }
 
         table {
             width: 100%;
-            border-collapse: collapse;
-            min-width: 750px;
+            min-width: 950px;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: white;
         }
 
         th, td {
-            padding: 15px;
+            padding: 18px 13px;
             text-align: center;
-            border: 1px solid #ddd;
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            font-size: 12px;
+            line-height: 1.6;
+            min-width: 145px;
         }
 
         th {
-            background: #0878b8;
+            background: var(--navy);
             color: white;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        th:first-child,
+        td:first-child {
+            min-width: 110px;
         }
 
         td {
-            background: #fafafa;
+            color: var(--text);
+            background: white;
         }
 
-        td:first-child {
-            font-weight: bold;
-            background: #f2f6fa;
+        tbody tr:nth-child(even) td {
+            background: #f7faff;
         }
 
-        tr:hover td {
-            background: #eef7fc;
+        tbody tr:hover td {
+            background: #edf4ff;
+        }
+
+        tbody td:first-child {
+            background: #eaf1fc;
+            color: var(--navy);
+            font-weight: 800;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        th:last-child,
+        td:last-child {
+            border-right: none;
+        }
+
+        .subject {
+            display: inline-block;
+            font-weight: 600;
+            overflow-wrap: anywhere;
+        }
+
+        .note {
+            margin-top: 18px;
+            padding: 13px 15px;
+            border-radius: 9px;
+            background: #f0f5ff;
+            color: #365477;
+            font-size: 12px;
+            line-height: 1.7;
         }
 
         .back-button {
-            margin-top: 25px;
             width: 100%;
+            min-height: 48px;
+            margin-top: 25px;
             padding: 13px;
             border: none;
-            border-radius: 8px;
-            background: #0878b8;
+            border-radius: 9px;
+            background: var(--navy);
             color: white;
-            font-size: 16px;
-            font-weight: bold;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 700;
             cursor: pointer;
+            transition: 0.2s;
         }
 
         .back-button:hover {
-            background: #055d8e;
+            background: #0a2850;
         }
 
-    </style>
+        .footer {
+            padding: 17px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 12px;
+        }
 
+        @media (max-width: 600px) {
+            body {
+                padding: 14px 9px;
+            }
+
+            .page-header {
+                padding: 23px 17px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            .content {
+                padding: 20px 13px;
+            }
+
+            .schedule-info {
+                gap: 8px;
+            }
+
+            .info-chip {
+                font-size: 11px;
+                padding: 8px 10px;
+            }
+
+            th, td {
+                padding: 14px 11px;
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <main class="timetable-container">
+        <div class="top-bar"></div>
 
-    <div class="timetable-container">
+        <header class="page-header">
+            <span class="eyebrow">BVC STUDENT PORTAL</span>
 
-        <h1>📅 Timetable</h1>
+            <h1>📅 Class Timetable</h1>
 
-        <p class="subtitle">
-            Weekly class timetable
-        </p>
+            <p class="subtitle">
+                View your weekly class schedule and subject timings.
+            </p>
 
-        <div class="table-wrapper">
+            <div class="schedule-info">
+                <span class="info-chip">📆 Monday – Friday</span>
+                <span class="info-chip">🕘 First Class: 9:00 AM</span>
+                <span class="info-chip">🎓 Weekly Schedule</span>
+            </div>
+        </header>
 
-            <table>
+        <section class="content">
+            <h2 class="section-title">Weekly Class Schedule</h2>
 
-                <tr>
-                    <th>Day</th>
-                    <th>9:00 - 10:00</th>
-                    <th>10:00 - 11:00</th>
-                    <th>11:15 - 12:15</th>
-                    <th>12:15 - 1:15</th>
-                    <th>2:00 - 3:00</th>
-                </tr>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Day</th>
+                            <th>9:00 – 10:00</th>
+                            <th>10:00 – 11:00</th>
+                            <th>11:15 – 12:15</th>
+                            <th>12:15 – 1:15</th>
+                            <th>2:00 – 3:00</th>
+                        </tr>
+                    </thead>
 
-                <tr>
-                    <td>Monday</td>
-                    <td>Advanced Java</td>
-                    <td>Computer Networks</td>
-                    <td>Open Elective</td>
-                    <td>Data Warehouse and Data Mining</td>
-                    <td>Automata Theory and Compiler Design</td>
-                </tr>
+                    <tbody>
+                        <tr>
+                            <td>Monday</td>
+                            <td><span class="subject">Advanced Java</span></td>
+                            <td><span class="subject">Computer Networks</span></td>
+                            <td><span class="subject">Open Elective</span></td>
+                            <td><span class="subject">Data Warehouse and Data Mining</span></td>
+                            <td><span class="subject">Automata Theory and Compiler Design</span></td>
+                        </tr>
 
-                <tr>
-                    <td>Tuesday</td>
-                    <td>Computer Networks</td>
-                    <td>Advanced Java</td>
-                    <td>Automata Theory and Compiler Design</td>
-                    <td>Open Elective</td>
-                    <td>Data Warehouse and Data Mining</td>
-                </tr>
+                        <tr>
+                            <td>Tuesday</td>
+                            <td><span class="subject">Computer Networks</span></td>
+                            <td><span class="subject">Advanced Java</span></td>
+                            <td><span class="subject">Automata Theory and Compiler Design</span></td>
+                            <td><span class="subject">Open Elective</span></td>
+                            <td><span class="subject">Data Warehouse and Data Mining</span></td>
+                        </tr>
 
-                <tr>
-                    <td>Wednesday</td>
-                    <td>Data Warehouse and Data Mining</td>
-                    <td>Open Elective</td>
-                    <td>Advanced Java</td>
-                    <td>Computer Networks</td>
-                    <td>Automata Theory and Compiler Design</td>
-                </tr>
+                        <tr>
+                            <td>Wednesday</td>
+                            <td><span class="subject">Data Warehouse and Data Mining</span></td>
+                            <td><span class="subject">Open Elective</span></td>
+                            <td><span class="subject">Advanced Java</span></td>
+                            <td><span class="subject">Computer Networks</span></td>
+                            <td><span class="subject">Automata Theory and Compiler Design</span></td>
+                        </tr>
 
-                <tr>
-                    <td>Thursday</td>
-                    <td>Automata Theory and Compiler Design</td>
-                    <td>Computer Networks</td>
-                    <td>Data Warehouse and Data Mining</td>
-                    <td>Advanced Java</td>
-                    <td>Open Elective</td>
-                </tr>
+                        <tr>
+                            <td>Thursday</td>
+                            <td><span class="subject">Automata Theory and Compiler Design</span></td>
+                            <td><span class="subject">Computer Networks</span></td>
+                            <td><span class="subject">Data Warehouse and Data Mining</span></td>
+                            <td><span class="subject">Advanced Java</span></td>
+                            <td><span class="subject">Open Elective</span></td>
+                        </tr>
 
-                <tr>
-                    <td>Friday</td>
-                    <td>Open Elective</td>
-                    <td>Data Warehouse and Data Mining</td>
-                    <td>Computer Networks</td>
-                    <td>Automata Theory and Compiler Design</td>
-                    <td>Advanced Java</td>
-                </tr>
+                        <tr>
+                            <td>Friday</td>
+                            <td><span class="subject">Open Elective</span></td>
+                            <td><span class="subject">Data Warehouse and Data Mining</span></td>
+                            <td><span class="subject">Computer Networks</span></td>
+                            <td><span class="subject">Automata Theory and Compiler Design</span></td>
+                            <td><span class="subject">Advanced Java</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-            </table>
+            <div class="note">
+                <strong>Note:</strong> This is a sample timetable for the portal
+                design. Please verify the subjects and timings against your
+                college's official timetable.
+                On mobile, swipe horizontally to view all periods.
+            </div>
 
-        </div>
+            <button class="back-button"
+                    onclick="window.location.href='dashboard.html'">
+                ← Back to Dashboard
+            </button>
+        </section>
 
-        <button
-            class="back-button"
-            onclick="window.location.href='dashboard.html'">
-
-            ← Back to Dashboard
-
-        </button>
-
-    </div>
-
+        <footer class="footer">
+            © 2026 BVC Student Portal · Class Timetable
+        </footer>
+    </main>
 </body>
-
 </html>
+```

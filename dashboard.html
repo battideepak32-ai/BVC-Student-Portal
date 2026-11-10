@@ -1,590 +1,341 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>BVC Student Dashboard</title>
-
+    <title>BVC Student Portal | Dashboard</title>
     <link rel="stylesheet" href="style.css">
 
-</head>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        .dashboard {
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 30px 24px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 28px;
+            background: linear-gradient(135deg, #071b49, #123d83);
+            color: white;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(7, 27, 73, 0.15);
+        }
+
+        .college-brand {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .college-brand img {
+            width: 78px;
+            height: 78px;
+            object-fit: contain;
+            background: white;
+            padding: 6px;
+            border-radius: 14px;
+        }
+
+        .college-brand h1 {
+            margin: 0 0 9px;
+            font-size: 26px;
+            line-height: 1.3;
+        }
+
+        .college-brand p {
+            margin: 0;
+            color: #dbeafe;
+            font-size: 14px;
+        }
+
+        .student-info {
+            min-width: 150px;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+        }
+
+        .student-info strong {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 15px;
+        }
+
+        .student-info small {
+            color: #dbeafe;
+            overflow-wrap: anywhere;
+        }
+
+        .section-heading {
+            margin: 32px 0 8px;
+            color: #102b59;
+            font-size: 23px;
+        }
+
+        .section-description {
+            margin: 0 0 22px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .dashboard-menu {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .dashboard-menu button {
+            min-height: 145px;
+            padding: 24px 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 12px;
+            background: white;
+            color: #102b59;
+            border: 1px solid #e2e8f0;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 700;
+            text-align: left;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+            transition: transform 0.2s, box-shadow 0.2s,
+                        border-color 0.2s;
+        }
+
+        .dashboard-menu button:hover {
+            transform: translateY(-4px);
+            border-color: #93b4ed;
+            box-shadow: 0 10px 22px rgba(15, 42, 90, 0.1);
+        }
+
+        .menu-icon {
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            background: #eaf1ff;
+            border-radius: 12px;
+            font-size: 25px;
+        }
+
+        .menu-description {
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        .dashboard-menu .logout-btn {
+            background: #fff;
+            color: #b42318;
+        }
+
+        .dashboard-menu .logout-btn .menu-icon {
+            background: #fff0ee;
+        }
+
+        .dashboard-footer {
+            margin-top: 30px;
+            padding: 18px 10px;
+            color: #64748b;
+            border-top: 1px solid #dbe3ee;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        @media (max-width: 800px) {
+            .dashboard-menu {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .dashboard-header {
+                padding: 22px;
+            }
+
+            .college-brand h1 {
+                font-size: 22px;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .dashboard {
+                padding: 15px;
+            }
+
+            .dashboard-header {
+                padding: 18px;
+                align-items: flex-start;
+            }
+
+            .college-brand {
+                gap: 12px;
+                align-items: center;
+            }
+
+            .college-brand img {
+                width: 58px;
+                height: 58px;
+            }
+
+            .college-brand h1 {
+                font-size: 18px;
+            }
+
+            .college-brand p {
+                font-size: 12px;
+                line-height: 1.5;
+            }
+
+            .student-info {
+                width: 100%;
+            }
+
+            .section-heading {
+                font-size: 21px;
+                margin-top: 25px;
+            }
+
+            .dashboard-menu {
+                grid-template-columns: 1fr;
+                gap: 13px;
+            }
+
+            .dashboard-menu button {
+                min-height: 110px;
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
 
 <body>
 
-<div class="dashboard">
+    <main class="dashboard">
 
-    <!-- =========================
-         HEADER
-    ========================= -->
+        <header class="dashboard-header">
+            <div class="college-brand">
+                <img
+                    src="images/college-logo.png"
+                    alt="BVC College Logo"
+                >
 
-    <header class="dashboard-header">
-
-        <div class="college-brand">
-
-            <img
-                src="images/college-logo.png"
-                alt="BVC College Logo">
-
-            <div class="brand-text">
-
-                <h1>BVC Student Dashboard</h1>
-
-                <p>Student Portal</p>
-
+                <div>
+                    <h1>BVC Student Dashboard</h1>
+                    <p>Welcome to BVC Student Portal</p>
+                </div>
             </div>
 
-        </div>
-
-
-        <div class="student-info">
-
-            <strong id="headerStudentName">
-                Student
-            </strong>
-
-            <small>
-                ID:
-                <span id="studentId">
-                    Loading...
-                </span>
-            </small>
-
-        </div>
-
-    </header>
-
-
-    <!-- =========================
-         WELCOME CARD
-    ========================= -->
-
-    <section class="welcome-card">
-
-        <div>
-
-            <span class="welcome-label">
-                STUDENT PORTAL
-            </span>
-
-            <h2>
-                👋 Welcome,
-                <span id="welcomeName">
-                    Student
-                </span>!
-            </h2>
-
-            <p>
-                Access your academic information,
-                attendance, results and timetable
-                from one place.
-            </p>
-
-        </div>
-
-    </section>
-
-
-    <!-- =========================
-         SUMMARY
-    ========================= -->
-
-    <section class="summary-grid">
-
-
-        <div class="summary-card">
-
-            <div class="summary-icon">
-                📊
+            <div class="student-info">
+                <strong>👨‍🎓 Student Account</strong>
+                <small>
+                    Student ID:
+                    <span id="studentId">Loading...</span>
+                </small>
             </div>
+        </header>
 
-            <div class="summary-content">
-
-                <strong id="attendanceValue">
-                    --
-                </strong>
-
-                <span>
-                    Attendance
-                </span>
-
-            </div>
-
-        </div>
-
-
-        <div class="summary-card">
-
-            <div class="summary-icon">
-                📝
-            </div>
-
-            <div class="summary-content">
-
-                <strong id="resultValue">
-                    --
-                </strong>
-
-                <span>
-                    Latest Result
-                </span>
-
-            </div>
-
-        </div>
-
-
-        <div class="summary-card">
-
-            <div class="summary-icon">
-                📚
-            </div>
-
-            <div class="summary-content">
-
-                <strong id="subjectValue">
-                    --
-                </strong>
-
-                <span>
-                    Subjects
-                </span>
-
-            </div>
-
-        </div>
-
-
-    </section>
-
-
-    <!-- =========================
-         QUICK ACCESS
-    ========================= -->
-
-    <section class="quick-access">
-
-        <h2 class="section-title">
-            📌 Quick Access
-        </h2>
-
-        <p class="section-subtitle">
-            Select an option to view your academic information.
+        <h2 class="section-heading">Student Services</h2>
+        <p class="section-description">
+            Access your academic information and student services.
         </p>
 
+        <nav class="dashboard-menu">
 
-        <div class="dashboard-menu">
-
-
-            <button
-                type="button"
+            <button type="button"
                 onclick="window.location.href='profile.html'">
-
-                <span class="menu-icon">
-                    👤
+                <span class="menu-icon">👤</span>
+                <span>Student Profile</span>
+                <span class="menu-description">
+                    View and manage your profile
                 </span>
-
-                <span class="menu-title">
-                    Student Profile
-                </span>
-
-                <span class="menu-arrow">
-                    →
-                </span>
-
             </button>
 
-
-            <button
-                type="button"
+            <button type="button"
                 onclick="window.location.href='subjects.html'">
-
-                <span class="menu-icon">
-                    📚
+                <span class="menu-icon">📚</span>
+                <span>Subjects</span>
+                <span class="menu-description">
+                    View your enrolled subjects
                 </span>
-
-                <span class="menu-title">
-                    Subjects
-                </span>
-
-                <span class="menu-arrow">
-                    →
-                </span>
-
             </button>
 
-
-            <button
-                type="button"
+            <button type="button"
                 onclick="window.location.href='Attendance.html'">
-
-                <span class="menu-icon">
-                    📊
+                <span class="menu-icon">📊</span>
+                <span>Attendance</span>
+                <span class="menu-description">
+                    Check attendance information
                 </span>
-
-                <span class="menu-title">
-                    Attendance
-                </span>
-
-                <span class="menu-arrow">
-                    →
-                </span>
-
             </button>
 
-
-            <button
-                type="button"
+            <button type="button"
                 onclick="window.location.href='results.html'">
-
-                <span class="menu-icon">
-                    📝
+                <span class="menu-icon">📝</span>
+                <span>Results</span>
+                <span class="menu-description">
+                    View marks and grades
                 </span>
-
-                <span class="menu-title">
-                    Results
-                </span>
-
-                <span class="menu-arrow">
-                    →
-                </span>
-
             </button>
 
-
-            <button
-                type="button"
+            <button type="button"
                 onclick="window.location.href='timetable.html'">
-
-                <span class="menu-icon">
-                    📅
+                <span class="menu-icon">📅</span>
+                <span>Timetable</span>
+                <span class="menu-description">
+                    Check your weekly class schedule
                 </span>
-
-                <span class="menu-title">
-                    Timetable
-                </span>
-
-                <span class="menu-arrow">
-                    →
-                </span>
-
             </button>
 
-
-            <button
-                type="button"
-                class="logout-btn"
+            <button type="button" class="logout-btn"
                 onclick="logout()">
-
-                <span class="menu-icon">
-                    🚪
+                <span class="menu-icon">🚪</span>
+                <span>Logout</span>
+                <span class="menu-description">
+                    Return to the student login page
                 </span>
-
-                <span class="menu-title">
-                    Logout
-                </span>
-
-                <span class="menu-arrow">
-                    →
-                </span>
-
             </button>
 
+        </nav>
 
-        </div>
+        <footer class="dashboard-footer">
+            © BVC Engineering College | Student Portal
+        </footer>
 
-    </section>
+    </main>
 
+    <script src="script.js"></script>
 
-    <!-- =========================
-         STUDENT INFORMATION
-    ========================= -->
+    <script>
+        const savedStudentId = localStorage.getItem("studentId");
 
-    <section class="details-card">
-
-
-        <div class="details-header">
-
-            <div>
-
-                <span class="details-label">
-                    ACADEMIC DETAILS
-                </span>
-
-                <h2>
-                    🎓 Student Information
-                </h2>
-
-            </div>
-
-        </div>
-
-
-        <div class="details-grid">
-
-
-            <div class="detail-box">
-
-                <span>
-                    Student ID
-                </span>
-
-                <strong id="detailStudentId">
-                    --
-                </strong>
-
-            </div>
-
-
-            <div class="detail-box">
-
-                <span>
-                    Name
-                </span>
-
-                <strong id="detailName">
-                    --
-                </strong>
-
-            </div>
-
-
-            <div class="detail-box">
-
-                <span>
-                    Branch
-                </span>
-
-                <strong id="detailBranch">
-                    --
-                </strong>
-
-            </div>
-
-
-            <div class="detail-box">
-
-                <span>
-                    Year
-                </span>
-
-                <strong id="detailYear">
-                    --
-                </strong>
-
-            </div>
-
-
-            <div class="detail-box">
-
-                <span>
-                    Section
-                </span>
-
-                <strong id="detailSection">
-                    --
-                </strong>
-
-            </div>
-
-
-        </div>
-
-    </section>
-
-
-    <!-- =========================
-         FOOTER
-    ========================= -->
-
-    <footer class="dashboard-footer">
-
-        <p>
-            © 2026 BVC Student Portal
-        </p>
-
-        <span>
-            Academic Management System
-        </span>
-
-    </footer>
-
-
-</div>
-
-
-<!-- =========================
-     JAVASCRIPT
-========================= -->
-
-<script src="script.js"></script>
-
-
-<script>
-
-    // ==================================
-    // GET STUDENT DATA
-    // ==================================
-
-    const savedStudentId =
-        localStorage.getItem("studentId");
-
-    const savedStudentName =
-        localStorage.getItem("studentName");
-
-    const savedBranch =
-        localStorage.getItem("studentBranch");
-
-    const savedYear =
-        localStorage.getItem("studentYear");
-
-    const savedSection =
-        localStorage.getItem("studentSection");
-
-
-    // ==================================
-    // STUDENT ID
-    // ==================================
-
-    if (savedStudentId) {
-
-        document.getElementById(
-            "studentId"
-        ).textContent =
-            savedStudentId;
-
-
-        document.getElementById(
-            "detailStudentId"
-        ).textContent =
-            savedStudentId;
-
-    }
-    else {
-
-        document.getElementById(
-            "studentId"
-        ).textContent =
-            "Not available";
-
-    }
-
-
-    // ==================================
-    // STUDENT NAME
-    // ==================================
-
-    if (savedStudentName) {
-
-        document.getElementById(
-            "headerStudentName"
-        ).textContent =
-            savedStudentName;
-
-
-        document.getElementById(
-            "welcomeName"
-        ).textContent =
-            savedStudentName;
-
-
-        document.getElementById(
-            "detailName"
-        ).textContent =
-            savedStudentName;
-
-    }
-
-
-    // ==================================
-    // BRANCH
-    // ==================================
-
-    if (savedBranch) {
-
-        document.getElementById(
-            "detailBranch"
-        ).textContent =
-            savedBranch;
-
-    }
-
-
-    // ==================================
-    // YEAR
-    // ==================================
-
-    if (savedYear) {
-
-        document.getElementById(
-            "detailYear"
-        ).textContent =
-            savedYear;
-
-    }
-
-
-    // ==================================
-    // SECTION
-    // ==================================
-
-    if (savedSection) {
-
-        document.getElementById(
-            "detailSection"
-        ).textContent =
-            savedSection;
-
-    }
-
-
-    // ==================================
-    // SUMMARY
-    // ==================================
-
-    document.getElementById(
-        "attendanceValue"
-    ).textContent = "--";
-
-
-    document.getElementById(
-        "resultValue"
-    ).textContent = "--";
-
-
-    document.getElementById(
-        "subjectValue"
-    ).textContent = "--";
-
-
-    // ==================================
-    // LOGOUT
-    // ==================================
-
-    function logout() {
-
-        localStorage.removeItem("studentId");
-
-        localStorage.removeItem("studentName");
-
-        localStorage.removeItem("studentBranch");
-
-        localStorage.removeItem("studentYear");
-
-        localStorage.removeItem("studentSection");
-
-        window.location.href = "index.html";
-
-    }
-
-</script>
-
+        document.getElementById("studentId").textContent =
+            savedStudentId || "Not available";
+    </script>
 
 </body>
-
 </html>
+```

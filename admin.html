@@ -1,1315 +1,460 @@
-const express = require("express");
-const db = require("./database");
+<!DOCTYPE html>
+<html lang="en">
 
-const app = express();
+<head>
 
-const PORT = process.env.PORT || 3000;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-// ===============================
-// MIDDLEWARE
-// ===============================
+    <title>BVC Admin Dashboard</title>
 
-app.use(express.json());
-app.use(express.static(__dirname));
+    <style>
 
-
-// ===============================
-// ADMIN AUTHENTICATION
-// ===============================
-
-const ADMIN_USERNAME = "admin";
-const ADMIN_PASSWORD = "bvcadmin123";
-
-let adminToken = null;
-
-
-// ===============================
-// ADMIN LOGIN
-// ===============================
-
-app.post("/admin-login", (req, res) => {
-
-    const { username, password } = req.body;
-
-    if (
-        username === ADMIN_USERNAME &&
-        password === ADMIN_PASSWORD
-    ) {
-
-        adminToken =
-            "admin-" +
-            Date.now() +
-            "-" +
-            Math.random().toString(36).substring(2);
-
-        return res.json({
-            success: true,
-            token: adminToken
-        });
-    }
-
-    res.status(401).json({
-        success: false,
-        error: "Invalid admin username or password"
-    });
-});
-
-
-// ===============================
-// ADMIN AUTH MIDDLEWARE
-// ===============================
-
-function requireAdmin(req, res, next) {
-
-    const token = req.headers.authorization;
-
-    if (!token || token !== adminToken) {
-
-        return res.status(403).json({
-            error: "Unauthorized"
-        });
-    }
-
-    next();
-}
-
-
-// ===============================
-// STUDENT LOGIN
-// ===============================
-
-app.post("/login", (req, res) => {
-
-    const { studentId, password } = req.body;
-
-    if (!studentId || !password) {
-
-        return res.status(400).json({
-            success: false,
-            error: "Student ID and password are required"
-        });
-    }
-
-    const sql = `
-        SELECT *
-        FROM students
-        WHERE student_id = ?
-        AND password = ?
-    `;
-
-    db.get(
-        sql,
-        [studentId, password],
-        (err, student) => {
-
-            if (err) {
-
-                console.error(err);
-
-                return res.status(500).json({
-                    success: false,
-                    error: "Database error"
-                });
-            }
-
-            if (!student) {
-
-                return res.status(401).json({
-                    success: false,
-                    error: "Invalid Student ID or Password"
-                });
-            }
-
-
-            // ===============================
-            // SAVE LOGIN HISTORY
-            // ===============================
-
-            const loginSql = `
-                INSERT INTO login_history
-                (student_id, login_date, login_time)
-                VALUES (?, date('now'), time('now'))
-            `;
-
-            db.run(
-                loginSql,
-                [studentId],
-                (loginErr) => {
-
-                    if (loginErr) {
-                        console.error(
-                            "Login history error:",
-                            loginErr
-                        );
-                    }
-
-                    res.json({
-                        success: true,
-                        student: student
-                    });
-                }
-            );
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-    );
-});
 
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f6fa;
+            padding: 30px;
+        }
 
-// ======================================================
-// STUDENTS
-// ======================================================
+        .admin-container {
+            max-width: 1100px;
+            margin: auto;
+        }
 
+        /* Header */
 
-// GET ALL STUDENTS
+        .header {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.10);
 
-app.get(
-    "/api/students",
-    requireAdmin,
-    (req, res) => {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
 
-        db.all(
-            `SELECT id, student_id, name, branch, year, section
-             FROM students
-             ORDER BY id DESC`,
-            [],
-            (err, rows) => {
+            margin-bottom: 25px;
+        }
 
-                if (err) {
+        .header h1 {
+            color: #0878b8;
+            margin-bottom: 6px;
+        }
 
-                    console.error(err);
+        .header p {
+            color: #666;
+        }
 
-                    return res.status(500).json({
-                        error: "Database error"
-                    });
-                }
+        .logout-btn {
+            background: #d9534f;
+            color: white;
+            border: none;
+            padding: 11px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
 
-                res.json(rows);
-            }
-        );
-    }
-);
-
-
-// ADD STUDENT
-
-app.post(
-    "/api/students",
-    requireAdmin,
-    (req, res) => {
-
-        const {
-            student_id,
-            name,
-            branch,
-            year,
-            section,
-            password
-        } = req.body;
-
-
-        if (
-            !student_id ||
-            !name ||
-            !branch ||
-            !year ||
-            !section ||
-            !password
-        ) {
-
-            return res.status(400).json({
-                error: "All fields are required"
-            });
+        .logout-btn:hover {
+            background: #b52b27;
         }
 
 
-        const sql = `
-            INSERT INTO students
-            (
-                student_id,
-                name,
-                branch,
-                year,
-                section,
-                password
-            )
-            VALUES (?, ?, ?, ?, ?, ?)
-        `;
+        /* Statistics */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+
+            text-align: center;
+        }
+
+        .stat-card .icon {
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card strong {
+            display: block;
+            font-size: 30px;
+            color: #0878b8;
+            margin-bottom: 5px;
+        }
+
+        .stat-card span {
+            color: #666;
+        }
 
 
-        db.run(
-            sql,
-            [
-                student_id,
-                name,
-                branch,
-                year,
-                section,
-                password
-            ],
-            function (err) {
+        /* History */
 
-                if (err) {
+        .history-card {
+            background: white;
+            padding: 25px;
 
-                    console.error(err);
+            border-radius: 16px;
 
-                    return res.status(400).json({
-                        error: err.message
-                    });
+            box-shadow: 0 8px 25px rgba(0,0,0,0.10);
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+        .history-header h2 {
+            color: #333;
+        }
+
+        .refresh-btn {
+            background: #0878b8;
+            color: white;
+
+            border: none;
+            padding: 11px 18px;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .refresh-btn:hover {
+            background: #055d8e;
+        }
+
+
+        /* Table */
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #0878b8;
+            color: white;
+            padding: 14px;
+            text-align: left;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background: #f5faff;
+        }
+
+        .no-data {
+            text-align: center;
+            color: #777;
+            padding: 30px;
+        }
+
+
+        /* Mobile */
+
+        @media (max-width: 700px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .history-card {
+                padding: 18px;
+            }
+
+            .history-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .refresh-btn {
+                width: 100%;
+            }
+
+            th,
+            td {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <div class="admin-container">
+
+
+        <!-- HEADER -->
+
+        <div class="header">
+
+            <div>
+
+                <h1>🛡️ BVC Admin Dashboard</h1>
+
+                <p>
+                    Student Login Monitoring System
+                </p>
+
+            </div>
+
+
+            <button
+                class="logout-btn"
+                onclick="adminLogout()">
+
+                🚪 Admin Logout
+
+            </button>
+
+        </div>
+
+
+
+        <!-- STATISTICS -->
+
+        <div class="stats">
+
+
+            <div class="stat-card">
+
+                <div class="icon">
+                    🔢
+                </div>
+
+                <strong id="totalLogins">
+                    0
+                </strong>
+
+                <span>
+                    Total Logins
+                </span>
+
+            </div>
+
+
+
+            <div class="stat-card">
+
+                <div class="icon">
+                    👨‍🎓
+                </div>
+
+                <strong id="uniqueStudents">
+                    0
+                </strong>
+
+                <span>
+                    Unique Students
+                </span>
+
+            </div>
+
+
+
+            <div class="stat-card">
+
+                <div class="icon">
+                    🕐
+                </div>
+
+                <strong id="latestLogin">
+                    --
+                </strong>
+
+                <span>
+                    Latest Login
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- LOGIN HISTORY -->
+
+        <div class="history-card">
+
+
+            <div class="history-header">
+
+                <h2>
+                    📋 Login History
+                </h2>
+
+
+                <button
+                    class="refresh-btn"
+                    onclick="loadLoginHistory()">
+
+                    🔄 Refresh
+
+                </button>
+
+            </div>
+
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Student ID</th>
+
+                            <th>Login Date</th>
+
+                            <th>Login Time</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="loginTable">
+
+                        <tr>
+
+                            <td
+                                colspan="4"
+                                class="no-data">
+
+                                Loading login history...
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <script>
+
+
+        // ===============================
+        // LOAD LOGIN HISTORY
+        // ===============================
+
+        async function loadLoginHistory() {
+
+            const table =
+                document.getElementById("loginTable");
+
+            const totalLogins =
+                document.getElementById("totalLogins");
+
+            const uniqueStudents =
+                document.getElementById("uniqueStudents");
+
+            const latestLogin =
+                document.getElementById("latestLogin");
+
+
+            try {
+
+                const token =
+                    localStorage.getItem("adminToken");
+
+
+                if (!token) {
+
+                    alert("Admin login required!");
+
+                    window.location.href =
+                        "admin-login.html";
+
+                    return;
+
                 }
 
 
-                res.json({
-                    success: true,
-                    id: this.lastID
-                });
-            }
-        );
-    }
-);
+                const response =
+                    await fetch("/api/logins", {
 
+                        headers: {
 
-// DELETE STUDENT
+                            "Authorization": token
 
-app.delete(
-    "/api/students/:studentId",
-    requireAdmin,
-    (req, res) => {
+                        }
 
-        const { studentId } = req.params;
-
-        db.run(
-            `DELETE FROM students
-             WHERE student_id = ?`,
-            [studentId],
-            function (err) {
-
-                if (err) {
-
-                    console.error(err);
-
-                    return res.status(500).json({
-                        error: "Database error"
                     });
-                }
-
-                res.json({
-                    success: true,
-                    deleted: this.changes
-                });
-            }
-        );
-    }
-);
 
 
-// ======================================================
-// SUBJECTS
-// ======================================================
+                if (response.status === 403) {
 
+                    localStorage.removeItem(
+                        "adminToken"
+                    );
 
-// GET ALL SUBJECTS
+                    alert("Admin session expired!");
 
-app.get(
-    "/api/subjects",
-    requireAdmin,
-    (req, res) => {
+                    window.location.href =
+                        "admin-login.html";
 
-        const sql = `
-            SELECT
-                subjects.id,
-                subjects.student_id,
-                students.name AS student_name,
-                subjects.subject_code,
-                subjects.subject_name,
-                subjects.faculty
-            FROM subjects
-            LEFT JOIN students
-            ON subjects.student_id = students.student_id
-            ORDER BY subjects.id DESC
-        `;
+                    return;
 
-
-        db.all(
-            sql,
-            [],
-            (err, rows) => {
-
-                if (err) {
-
-                    console.error(err);
-
-                    return res.status(500).json({
-                        error: "Database error"
-                    });
-                }
-
-                res.json(rows);
-            }
-        );
-    }
-);
-
-
-// GET SUBJECTS FOR STUDENT
-
-app.get(
-    "/api/subjects/:studentId",
-    (req, res) => {
-
-        const { studentId } = req.params;
-
-        db.all(
-            `SELECT *
-             FROM subjects
-             WHERE student_id = ?
-             ORDER BY id DESC`,
-            [studentId],
-            (err, rows) => {
-
-                if (err) {
-
-                    console.error(err);
-
-                    return res.status(500).json({
-                        error: "Database error"
-                    });
-                }
-
-                res.json(rows);
-            }
-        );
-    }
-);
-
-
-// ADD SUBJECT
-
-app.post(
-    "/api/subjects",
-    requireAdmin,
-    (req, res) => {
-
-        const {
-            student_id,
-            subject_code,
-            subject_name,
-            faculty
-        } = req.body;
-
-
-        const sql = `
-            INSERT INTO subjects
-            (
-                student_id,
-                subject_code,
-                subject_name,
-                faculty
-            )
-            VALUES (?, ?, ?, ?)
-        `;
-
-
-        db.run(
-            sql,
-            [
-                student_id,
-                subject_code,
-                subject_name,
-                faculty
-            ],
-            function (err) {
-
-                if (err) {
-
-                    console.error(err);
-
-                    return res.status(400).json({
-                        error: err.message
-                    });
                 }
 
 
-                res.json({
-                    success: true,
-                    id: this.lastID
-                });
-            }
-        );
-    }
-);
-
-
-// UPDATE SUBJECT
-
-app.put(
-    "/api/subjects/:id",
-    requireAdmin,
-    (req, res) => {
-
-        const { id } = req.params;
-
-        const {
-            student_id,
-            subject_code,
-            subject_name,
-            faculty
-        } = req.body;
-
-
-        const sql = `
-            UPDATE subjects
-            SET
-                student_id = ?,
-                subject_code = ?,
-                subject_name = ?,
-                faculty = ?
-            WHERE id = ?
-        `;
-
-
-        db.run(
-            sql,
-            [
-                student_id,
-                subject_code,
-                subject_name,
-                faculty,
-                id
-            ],
-            function (err) {
-
-                if (err) {
-
-                    console.error(err);
-
-                    return res.status(500).json({
-                        error: err.message
-                    });
-                }
-
-
-                res.json({
-                    success: true,
-                    updated: this.changes
-                });
-            }
-        );
-    }
-);
-
-
-// DELETE SUBJECT
-
-app.delete(
-    "/api/subjects/:id",
-    requireAdmin,
-    (req, res) => {
-
-        db.run(
-            `DELETE FROM subjects
-             WHERE id = ?`,
-            [req.params.id],
-            function (err) {
-
-                if (err) {
-
-                    console.error(err);
-
-                    return res.status(500).json({
-                        error: "Database error"
-                    });
-                }
-
-
-                res.json({
-                    success: true,
-                    deleted: this.changes
-                });
-            }
-        );
-    }
-);
-
-
-// ======================================================
-// ATTENDANCE
-// ======================================================
-
-
-// GET ALL ATTENDANCE
-
-app.get(
-    "/api/attendance",
-    requireAdmin,
-    (req, res) => {
-
-        const sql = `
-            SELECT
-                attendance.id,
-                attendance.student_id,
-                students.name AS student_name,
-                attendance.subject_code,
-                attendance.subject_name,
-                attendance.total_classes,
-                attendance.attended_classes
-            FROM attendance
-            LEFT JOIN students
-            ON attendance.student_id = students.student_id
-            ORDER BY attendance.id DESC
-        `;
-
-
-        db.all(
-            sql,
-            [],
-            (err, rows) => {
-
-                if (err) {
-
-                    console.error(err);
-
-                    return res.status(500).json({
-                        error: "Database error"
-                    });
-                }
-
-                res.json(rows);
-            }
-        );
-    }
-);
-
-
-// GET ATTENDANCE FOR STUDENT
-
-app.get(
-    "/api/attendance/:studentId",
-    (req, res) => {
-
-        db.all(
-            `SELECT *
-             FROM attendance
-             WHERE student_id = ?
-             ORDER BY id DESC`,
-            [req.params.studentId],
-            (err, rows) => {
-
-                if (err) {
-
-                    console.error(err);
-
-                    return res.status(500).json({
-                        error: "Database error"
-                    });
-                }
-
-                res.json(rows);
-            }
-        );
-    }
-);
-
-
-// ADD ATTENDANCE
-
-app.post(
-    "/api/attendance",
-    requireAdmin,
-    (req, res) => {
-
-        const {
-            student_id,
-            subject_code,
-            subject_name,
-            total_classes,
-            attended_classes
-        } = req.body;
-
-
-        const sql = `
-            INSERT INTO attendance
-            (
-                student_id,
-                subject_code,
-                subject_name,
-                total_classes,
-                attended_classes
-            )
-            VALUES (?, ?, ?, ?, ?)
-        `;
-
-
-        db.run(
-            sql,
-            [
-                student_id,
-                subject_code,
-                subject_name,
-                total_classes,
-                attended_classes
-            ],
-            function (err) {
-
-                if (err) {
-
-                    console.error(err);
-
-                    return res.status(400).json({
-                        error: err.message
-                    });
-                }
-
-
-                res.json({
-                    success: true,
-                    id: this.lastID
-                });
-            }
-        );
-    }
-);
-
-
-// UPDATE ATTENDANCE
-
-app.put(
-    "/api/attendance/:id",
-    requireAdmin,
-    (req, res) => {
-
-        const {
-            student_id,
-            subject_code,
-            subject_name,
-            total_classes,
-            attended_classes
-        } = req.body;
-
-
-        const sql = `
-            UPDATE attendance
-            SET
-                student_id = ?,
-                subject_code = ?,
-                subject_name = ?,
-                total_classes = ?,
-                attended_classes = ?
-            WHERE id = ?
-        `;
-
-
-        db.run(
-            sql,
-            [
-                student_id,
-                subject_code,
-                subject_name,
-                total_classes,
-                attended_classes,
-                req.params.id
-            ],
-            function (err) {
-
-                if (err) {
-
-                    console.error(err);
-
-                    return res.status(500).json({
-                        error: err.message
-                    });
-                }
-
-
-                res.json({
-                    success: true,
-                    updated: this.changes
-                });
-            }
-        );
-    }
-);
-
-
-// DELETE ATTENDANCE
-
-app.delete(
-    "/api/attendance/:id",
-    requireAdmin,
-    (req, res) => {
-
-        db.run(
-            `DELETE FROM attendance
-             WHERE id = ?`,
-            [req.params.id],
-            function (err) {
-
-                if (err) {
-
-                    console.error(err);
-
-                    return res.status(500).json({
-                        error: "Database error"
-                    });
-                }
-
-
-                res.json({
-                    success: true,
-                    deleted: this.changes
-                });
-            }
-        );
-    }
-);
-
-
-// ======================================================
-// RESULTS
-// ======================================================
-
-
-// GET ALL RESULTS
-
-app.get(
-    "/api/results",
-    requireAdmin,
-    (req, res) => {
-
-        const sql = `
-            SELECT
-                results.id,
-                results.student_id,
-                students.name AS student_name,
-                results.subject_code,
-                results.subject_name,
-                results.marks,
-                results.max_marks,
-                results.grade
-            FROM results
-            LEFT JOIN students
-            ON results.student_id = students.student_id
-            ORDER BY results.id DESC
-        `;
-
-
-        db.all(
-            sql,
-            [],
-            (err, rows) => {
-
-                if (err) {
-
-                    console.error(err);
-
-                    return res.status(500).json({
-                        error: "Database error"
-                    });
-                }
-
-                res.json(rows);
-            }
-        );
-    }
-);
-
-
-// GET RESULTS FOR STUDENT
-
-app.get(
-    "/api/results/:studentId",
-    (req, res) => {
-
-        db.all(
-            `SELECT *
-             FROM results
-             WHERE student_id = ?
-             ORDER BY id DESC`,
-            [req.params.studentId],
-            (err, rows) => {
-
-                if (err) {
-
-                    console.error(err);
-
-                    return res.status(500).json({
-                        error: "Database error"
-                    });
-                }
-
-                res.json(rows);
-            }
-        );
-    }
-);
-
-
-// ADD RESULT
-
-app.post(
-    "/api/results",
-    requireAdmin,
-    (req, res) => {
-
-        const {
-            student_id,
-            subject_code,
-            subject_name,
-            marks,
-            max_marks,
-            grade
-        } = req.body;
-
-
-        const sql = `
-            INSERT INTO results
-            (
-                student_id,
-                subject_code,
-                subject_name,
-                marks,
-                max_marks,
-                grade
-            )
-            VALUES (?, ?, ?, ?, ?, ?)
-        `;
-
-
-        db.run(
-            sql,
-            [
-                student_id,
-                subject_code,
-                subject_name,
-                marks,
-                max_marks,
-                grade
-            ],
-            function (err) {
-
-                if (err) {
-
-                    console.error(err);
-
-                    return res.status(400).json({
-                        error: err.message
-                    });
-                }
-
-
-                res.json({
-                    success: true,
-                    id: this.lastID
-                });
-            }
-        );
-    }
-);
-
-
-// UPDATE RESULT
-
-app.put(
-    "/api/results/:id",
-    requireAdmin,
-    (req, res) => {
-
-        const {
-            student_id,
-            subject_code,
-            subject_name,
-            marks,
-            max_marks,
-            grade
-        } = req.body;
-
-
-        const sql = `
-            UPDATE results
-            SET
-                student_id = ?,
-                subject_code = ?,
-                subject_name = ?,
-                marks = ?,
-                max_marks = ?,
-                grade = ?
-            WHERE id = ?
-        `;
-
-
-        db.run(
-            sql,
-            [
-                student_id,
-                subject_code,
-                subject_name,
-                marks,
-                max_marks,
-                grade,
-                req.params.id
-            ],
-            function (err) {
-
-                if (err) {
-
-                    console.error(err);
-
-                    return res.status(500).json({
-                        error: err.message
-                    });
-                }
-
-
-                res.json({
-                    success: true,
-                    updated: this.changes
-                });
-            }
-        );
-    }
-);
-
-
-// DELETE RESULT
-
-app.delete(
-    "/api/results/:id",
-    requireAdmin,
-    (req, res) => {
-
-        db.run(
-            `DELETE FROM results
-             WHERE id = ?`,
-            [req.params.id],
-            function (err) {
-
-                if (err) {
-
-                    console.error(err);
-
-                    return res.status(500).json({
-                        error: "Database error"
-                    });
-                }
-
-
-                res.json({
-                    success: true,
-                    deleted: this.changes
-                });
-            }
-        );
-    }
-);
-
-
-// ======================================================
-// TIMETABLE
-// ======================================================
-
-
-// GET ALL TIMETABLE
-
-app.get(
-    "/api/timetable",
-    requireAdmin,
-    (req, res) => {
-
-        const sql = `
-            SELECT
-                timetable.id,
-                timetable.student_id,
-                students.name AS student_name,
-                timetable.day,
-                timetable.start_time,
-                timetable.end_time,
-                timetable.subject_code,
-                timetable.subject_name,
-                timetable.faculty,
-                timetable.room
-            FROM timetable
-            LEFT JOIN students
-            ON timetable.student_id = students.student_id
-            ORDER BY timetable.id DESC
-        `;
-
-
-        db.all(
-            sql,
-            [],
-            (err, rows) => {
-
-                if (err) {
-
-                    console.error(err);
-
-                    return res.status(500).json({
-                        error: "Database error"
-                    });
-                }
-
-                res.json(rows);
-            }
-        );
-    }
-);
-
-
-// GET TIMETABLE FOR STUDENT
-
-app.get(
-    "/api/timetable/:studentId",
-    (req, res) => {
-
-        db.all(
-            `SELECT *
-             FROM timetable
-             WHERE student_id = ?
-             ORDER BY id DESC`,
-            [req.params.studentId],
-            (err, rows) => {
-
-                if (err) {
-
-                    console.error(err);
-
-                    return res.status(500).json({
-                        error: "Database error"
-                    });
-                }
-
-                res.json(rows);
-            }
-        );
-    }
-);
-
-
-// ADD TIMETABLE
-
-app.post(
-    "/api/timetable",
-    requireAdmin,
-    (req, res) => {
-
-        const {
-            student_id,
-            day,
-            start_time,
-            end_time,
-            subject_code,
-            subject_name,
-            faculty,
-            room
-        } = req.body;
-
-
-        const sql = `
-            INSERT INTO timetable
-            (
-                student_id,
-                day,
-                start_time,
-                end_time,
-                subject_code,
-                subject_name,
-                faculty,
-                room
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        `;
-
-
-        db.run(
-            sql,
-            [
-                student_id,
-                day,
-                start_time,
-                end_time,
-                subject_code,
-                subject_name,
-                faculty,
-                room
-            ],
-            function (err) {
-
-                if (err) {
-
-                    console.error(err);
-
-                    return res.status(400).json({
-                        error: err.message
-                    });
-                }
-
-
-                res.json({
-                    success: true,
-                    id: this.lastID
-                });
-            }
-        );
-    }
-);
-
-
-// UPDATE TIMETABLE
-
-app.put(
-    "/api/timetable/:id",
-    requireAdmin,
-    (req, res) => {
-
-        const {
-            student_id,
-            day,
-            start_time,
-            end_time,
-            subject_code,
-            subject_name,
-            faculty,
-            room
-        } = req.body;
-
-
-        const sql = `
-            UPDATE timetable
-            SET
-                student_id = ?,
-                day = ?,
-                start_time = ?,
-                end_time = ?,
-                subject_code = ?,
-                subject_name = ?,
-                faculty = ?,
-                room = ?
-            WHERE id = ?
-        `;
-
-
-        db.run(
-            sql,
-            [
-                student_id,
-                day,
-                start_time,
-                end_time,
-                subject_code,
-                subject_name,
-                faculty,
-                room,
-                req.params.id
-            ],
-            function (err) {
-
-                if (err) {
-
-                    console.error(err);
-
-                    return res.status(500).json({
-                        error: err.message
-                    });
-                }
-
-
-                res.json({
-                    success: true,
-                    updated: this.changes
-                });
-            }
-        );
-    }
-);
-
-
-// DELETE TIMETABLE
-
-app.delete(
-    "/api/timetable/:id",
-    requireAdmin,
-    (req, res) => {
-
-        db.run(
-            `DELETE FROM timetable
-             WHERE id = ?`,
-            [req.params.id],
-            function (err) {
-
-                if (err) {
-
-                    console.error(err);
-
-                    return res.status(500).json({
-                        error: "Database error"
-                    });
-                }
-
-
-                res.json({
-                    success: true,
-                    deleted: this.changes
-                });
-            }
-        );
-    }
-);
-
-
-// ======================================================
-// LOGIN HISTORY
-// ======================================================
-
-app.get(
-    "/api/logins",
-    requireAdmin,
-    (req, res) => {
-
-        db.all(
-            `SELECT
-                id,
-                student_id,
-                login_date,
-                login_time
-             FROM login_history
-             ORDER BY id DESC`,
-            [],
-            (err, rows) => {
-
-                if (err) {
-
-                    console.error(err);
-
-                    return res.status(500).json({
-                        error: "Database error"
-                    });
-                }
-
-                res.json(rows);
-            }
-        );
-    }
-);
-
-
-// ======================================================
-// START SERVER
-// ======================================================
-
-app.listen(PORT, () => {
-
-    console.log(
-        `Server running at http://localhost:${PORT}`
-    );
-
-});
-function adminLogout() {
-    localStorage.removeItem("adminToken");
-    window.location.href = "admin-login.html";
-}
-
-function loadLoginHistory() {
-    return loadLogins();
-}
-loadAllData();
-</script>
-</body>
-</html>
+                const
