@@ -927,3 +927,357 @@ form {
         font-size: 13px;
     }
 }
+```css
+/* =========================================
+   RESPONSIVE IMPROVEMENTS
+   BVC STUDENT PORTAL
+========================================= */
+
+html {
+    width: 100%;
+    overflow-x: clip;
+}
+
+body {
+    width: 100%;
+    min-width: 0;
+    overflow-x: clip;
+}
+
+img {
+    max-width: 100%;
+}
+
+input,
+select,
+textarea,
+button {
+    max-width: 100%;
+    font: inherit;
+}
+
+button {
+    touch-action: manipulation;
+}
+
+/* Prevent dashboard content from overflowing */
+.dashboard,
+.dashboard-header,
+.college-brand,
+.welcome-card,
+.summary-card,
+.details-card,
+.quick-access {
+    min-width: 0;
+}
+
+.brand-text,
+.summary-content,
+.menu-title,
+.detail-box {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+/* Responsive tables on all pages */
+table {
+    max-width: 100%;
+    border-collapse: collapse;
+}
+
+.table-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Tablet screens */
+@media (max-width: 900px) {
+    .dashboard-header {
+        flex-wrap: wrap;
+    }
+
+    .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .details-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .dashboard-menu {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Mobile screens */
+@media (max-width: 600px) {
+    .login-page {
+        width: 100%;
+        padding: 16px 12px;
+    }
+
+    .login-container {
+        width: 100%;
+        max-width: 420px;
+        padding: 24px 18px;
+    }
+
+    .dashboard {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .dashboard-header {
+        width: 100%;
+        gap: 14px;
+    }
+
+    .college-brand {
+        align-items: center;
+        gap: 10px;
+    }
+
+    .brand-text h1 {
+        font-size: clamp(16px, 4.5vw, 22px);
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+    }
+
+    .welcome-card {
+        padding: 20px 16px;
+    }
+
+    .welcome-card h2 {
+        font-size: clamp(20px, 5.5vw, 26px);
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+    }
+
+    .summary-grid,
+    .dashboard-menu {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .details-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .summary-card,
+    .dashboard-menu button {
+        min-width: 0;
+    }
+
+    .login-btn,
+    .dashboard-menu button {
+        min-height: 44px;
+    }
+
+    /* Keep tables readable; scroll inside the table wrapper */
+    .table-wrapper table {
+        min-width: 520px;
+    }
+
+    table th,
+    table td {
+        padding: 10px;
+        font-size: 13px;
+    }
+}
+
+/* Very small phones */
+@media (max-width: 380px) {
+    .details-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .login-container {
+        padding: 20px 14px;
+    }
+
+    .details-card {
+        padding: 15px 12px;
+    }
+
+    .section-title {
+        font-size: 19px;
+    }
+}
+```css
+/* =========================================
+   RESPONSIVE IMPROVEMENTS
+   BVC STUDENT PORTAL
+========================================= */
+
+html {
+    width: 100%;
+    overflow-x: clip;
+}
+
+body {
+    width: 100%;
+    min-width: 0;
+    overflow-x: clip;
+}
+
+img {
+    max-width: 100%;
+}
+
+input,
+select,
+textarea,
+button {
+    max-width: 100%;
+    font: inherit;
+}
+
+button {
+    touch-action: manipulation;
+}
+
+/* Prevent dashboard content from overflowing */
+.dashboard,
+.dashboard-header,
+.college-brand,
+.welcome-card,
+.summary-card,
+.details-card,
+.quick-access {
+    min-width: 0;
+}
+
+.brand-text,
+.summary-content,
+.menu-title,
+.detail-box {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+/* Responsive tables on all pages */
+table {
+    max-width: 100%;
+    border-collapse: collapse;
+}
+
+.table-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Tablet screens */
+@media (max-width: 900px) {
+    .dashboard-header {
+        flex-wrap: wrap;
+    }
+
+    .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .details-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .dashboard-menu {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Mobile screens */
+@media (max-width: 600px) {
+    .login-page {
+        width: 100%;
+        padding: 16px 12px;
+    }
+
+    .login-container {
+        width: 100%;
+        max-width: 420px;
+        padding: 24px 18px;
+    }
+
+    .dashboard {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .dashboard-header {
+        width: 100%;
+        gap: 14px;
+    }
+
+    .college-brand {
+        align-items: center;
+        gap: 10px;
+    }
+
+    .brand-text h1 {
+        font-size: clamp(16px, 4.5vw, 22px);
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+    }
+
+    .welcome-card {
+        padding: 20px 16px;
+    }
+
+    .welcome-card h2 {
+        font-size: clamp(20px, 5.5vw, 26px);
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+    }
+
+    .summary-grid,
+    .dashboard-menu {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .details-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .summary-card,
+    .dashboard-menu button {
+        min-width: 0;
+    }
+
+    .login-btn,
+    .dashboard-menu button {
+        min-height: 44px;
+    }
+
+    /* Keep tables readable; scroll inside the table wrapper */
+    .table-wrapper table {
+        min-width: 520px;
+    }
+
+    table th,
+    table td {
+        padding: 10px;
+        font-size: 13px;
+    }
+}
+
+/* Very small phones */
+@media (max-width: 380px) {
+    .details-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .login-container {
+        padding: 20px 14px;
+    }
+
+    .details-card {
+        padding: 15px 12px;
+    }
+
+    .section-title {
+        font-size: 19px;
+    }
+}

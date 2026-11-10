@@ -1,81 +1,828 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>BVC Student Portal - Login</title>
+   <title>BVC Student Login</title>
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    <link rel="stylesheet" href="style.css">
+:root {
+    --green: #126747;
+    --dark-green: #083d2b;
+    --gold: #d7b36a;
+    --white: #ffffff;
+    --text: #20352b;
+    --muted: #75847b;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    background: #ffdddd !important;
+    color: #222;
+}
+
+
+/* HEADER */
+
+.topbar {
+    min-height: 86px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 15px 7%;
+    background: rgba(255,255,255,.96);
+    border-bottom: 1px solid #e5eae5;
+    box-shadow: 0 4px 20px rgba(20,50,35,.045);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.logo {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    border-radius: 50%;
+}
+
+.brand h1 {
+    color: var(--dark-green);
+    font-size: 21px;
+    font-weight: 750;
+    letter-spacing: -.5px;
+}
+
+.brand p {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.header-tag {
+    padding: 10px 17px;
+    border: 1px solid #dce8df;
+    border-radius: 30px;
+    color: var(--green);
+    background: #f7faf7;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+}
+
+/* MAIN */
+
+.main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 45px 24px;
+}
+
+.login-layout {
+    width: 100%;
+    max-width: 1050px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(360px, .95fr);
+    background: var(--white);
+    border: 1px solid rgba(220,230,222,.9);
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 24px 65px rgba(21,56,37,.12);
+}
+
+/* WELCOME PANEL */
+
+.welcome-panel {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    display: flex;
+    align-items: center;
+    padding: 58px 44px;
+    color: white;
+    background: linear-gradient(145deg, #176f4c 0%, #0d5037 48%, #073522 100%);
+}
+
+.welcome-panel::before,
+.welcome-panel::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.welcome-panel::before {
+    width: 330px;
+    height: 330px;
+    top: -135px;
+    right: -150px;
+    border: 1px solid rgba(255,255,255,.14);
+    box-shadow:
+        0 0 0 35px rgba(255,255,255,.035),
+        0 0 0 75px rgba(255,255,255,.025);
+}
+
+.welcome-panel::after {
+    width: 250px;
+    height: 250px;
+    bottom: -160px;
+    left: -80px;
+    background: rgba(215,179,106,.10);
+}
+
+.welcome-content {
+    position: relative;
+    z-index: 1;
+}
+
+.welcome-label {
+    display: inline-block;
+    margin-bottom: 26px;
+    padding: 9px 14px;
+    border: 1px solid rgba(231,202,139,.5);
+    border-radius: 30px;
+    color: #f0d69b;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.7px;
+}
+
+.welcome-panel h2 {
+    margin-bottom: 20px;
+    font-size: clamp(32px, 3.4vw, 43px);
+    line-height: 1.19;
+    letter-spacing: -1.3px;
+    font-weight: 750;
+}
+
+.welcome-panel h2 span {
+    color: #e6c47f;
+}
+
+.welcome-panel > div > p {
+    max-width: 380px;
+    color: #d8e8df;
+    font-size: 14px;
+    line-height: 1.9;
+}
+
+.features {
+    list-style: none;
+    margin-top: 32px;
+}
+
+.features li {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin: 18px 0;
+    color: #f0f6f2;
+    font-size: 13px;
+}
+
+.feature-icon {
+    width: 29px;
+    height: 29px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(230,196,127,.35);
+    border-radius: 50%;
+    background: rgba(230,196,127,.12);
+    color: #e6c47f;
+    font-weight: 800;
+}
+
+/* LOGIN PANEL */
+
+.login-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 48px clamp(27px, 4vw, 48px);
+}
+
+.login-heading {
+    margin-bottom: 32px;
+}
+
+.login-heading .small-title {
+    margin-bottom: 13px;
+    color: #9a742b;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2.3px;
+    text-transform: uppercase;
+}
+
+.login-heading h2 {
+    margin-bottom: 11px;
+    color: var(--dark-green);
+    font-size: 32px;
+    font-weight: 750;
+    letter-spacing: -1px;
+}
+
+.login-heading p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.form-group {
+    margin-bottom: 23px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 10px;
+    color: #34473c;
+    font-size: 12px;
+    font-weight: 750;
+}
+
+.input-wrap {
+    position: relative;
+}
+
+.input-wrap input {
+    width: 100%;
+    height: 53px;
+    padding: 0 15px;
+    border: 1px solid #dce5de;
+    border-radius: 10px;
+    outline: none;
+    background: #fafcfb;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 13px;
+    transition: border-color .2s, box-shadow .2s, background .2s;
+}
+
+.input-wrap input::placeholder {
+    color: #a2ada5;
+}
+
+.input-wrap input:focus {
+    border-color: var(--green);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(18,103,71,.09);
+}
+
+.password-input {
+    padding-right: 65px !important;
+}
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    transform: translateY(-50%);
+    padding: 6px;
+    border: none;
+    background: transparent;
+    color: var(--green);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.login-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 0 0 25px;
+    font-size: 11px;
+}
+
+.remember {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    cursor: pointer;
+}
+
+.remember input {
+    accent-color: var(--green);
+}
+
+.help-text {
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 750;
+}
+
+.login-button {
+    width: 100%;
+    min-height: 52px;
+    padding: 12px;
+    border: 1px solid var(--green);
+    border-radius: 10px;
+    background: linear-gradient(110deg, #176f4c, #0b5037);
+    color: white;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 750;
+    letter-spacing: .2px;
+    cursor: pointer;
+    box-shadow: 0 7px 17px rgba(18,103,71,.17);
+    transition: transform .2s, box-shadow .2s, background .2s;
+}
+
+.login-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 23px rgba(18,103,71,.23);
+}
+
+.login-button:focus-visible,
+.toggle-password:focus-visible {
+    outline: 3px solid #d7b36a;
+    outline-offset: 3px;
+}
+
+.login-button:disabled {
+    opacity: .7;
+    cursor: wait;
+    transform: none;
+}
+
+.message {
+    display: none;
+    margin-top: 16px;
+    padding: 12px 14px;
+    border-radius: 9px;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.message.error {
+    display: block;
+    border: 1px solid #f0d0cd;
+    background: #fff4f2;
+    color: #a12c24;
+}
+
+.message.success {
+    display: block;
+    border: 1px solid #c9e9d4;
+    background: #eaf7ef;
+    color: #17613a;
+}
+
+.demo-note {
+    margin-top: 24px;
+    padding: 13px 15px;
+    border: 1px solid #eee2c7;
+    border-radius: 10px;
+    background: #fcf9f0;
+    color: #78602b;
+    font-size: 11px;
+    line-height: 1.8;
+}
+
+.demo-note strong {
+    display: block;
+    margin-bottom: 4px;
+    color: #72551b;
+    font-size: 12px;
+}
+
+.footer {
+    padding: 20px 15px;
+    border-top: 1px solid #e7ede8;
+    background: white;
+    color: var(--muted);
+    text-align: center;
+    font-size: 11px;
+}
+
+.footer span {
+    color: var(--green);
+    font-weight: 750;
+}
+
+/* RESPONSIVE */
+
+(max-width: 800px) {@media 
+    .main {
+        padding: 32px 20px;
+    }
+
+    .login-layout {
+        max-width: 510px;
+        grid-template-columns: 1fr;
+    }
+
+    .welcome-panel {
+        padding: 36px 32px;
+    }
+
+    .welcome-panel h2 {
+        font-size: 32px;
+    }
+
+    .welcome-label {
+        margin-bottom: 20px;
+    }
+
+    .features {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4px 12px;
+        margin-top: 22px;
+    }
+
+    .features li {
+        margin: 8px 0;
+        font-size: 12px;
+    }
+
+    .login-panel {
+        padding: 38px 32px;
+    }
+}
+
+@media (max-width: 480px) {
+    .topbar {
+        min-height: 72px;
+        padding: 12px 16px;
+    }
+
+    .logo {
+        width: 45px;
+        height: 45px;
+    }
+
+    .brand {
+        gap: 10px;
+    }
+
+    .brand h1 {
+        font-size: 16px;
+    }
+
+    .brand p {
+        font-size: 10px;
+    }
+
+    .header-tag {
+        display: none;
+    }
+
+    .main {
+        padding: 22px 12px;
+    }
+
+    .login-layout {
+        border-radius: 16px;
+    }
+
+    .welcome-panel {
+        padding: 30px 23px;
+    }
+
+    .welcome-panel h2 {
+        font-size: 29px;
+    }
+
+    .welcome-panel > div > p {
+        font-size: 13px;
+    }
+
+    .features {
+        grid-template-columns: 1fr;
+    }
+
+    .features li {
+        margin: 8px 0;
+        font-size: 12px;
+    }
+
+    .login-panel {
+        padding: 30px 23px;
+    }
+
+    .login-heading {
+        margin-bottom: 27px;
+    }
+
+    .login-heading h2 {
+        font-size: 28px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+    }
+}
+body {
+    background: red !important;
+}
+
+    </style>
 </head>
 
 <body>
 
-    <main class="login-page">
+    <!-- HEADER -->
+    <header class="topbar">
+        <div class="brand">
+            <img
+                src="images/college-logo.png"
+                alt="BVC College Logo"
+                class="logo"
+                onerror="this.style.display='none'"
+            >
 
-        <div class="login-container">
-
-            <!-- College Logo -->
-            <div class="logo-wrapper">
-                <img
-                    src="images/college-logo.png"
-                    alt="BVC College Logo"
-                    class="logo"
-                >
-            </div>
-
-            <!-- Heading -->
-            <div class="login-heading">
+            <div>
                 <h1>BVC Student Portal</h1>
-                <h2>Student Login</h2>
-                <p>Login to access your student dashboard</p>
+                <p>Student Academic Services</p>
             </div>
-
-            <!-- Login Form -->
-            <form>
-
-                <div class="form-group">
-                    <label for="studentId">Student ID</label>
-
-                    <input
-                        id="studentId"
-                        type="text"
-                        placeholder="Enter your Student ID"
-                        autocomplete="username"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="password">Password</label>
-
-                    <input
-                        id="password"
-                        type="password"
-                        placeholder="Enter your password"
-                        autocomplete="current-password"
-                        required
-                    >
-                </div>
-
-                <button type="submit" class="login-btn">
-                    LOGIN
-                </button>
-
-            </form>
-
-            <!-- Footer -->
-            <div class="login-footer">
-                <p>© 2026 BVC Student Portal</p>
-            </div>
-
         </div>
 
+        <div class="header-tag">STUDENT LOGIN</div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+        <section class="login-layout">
+
+            <!-- WELCOME SECTION -->
+            <div class="welcome-panel">
+                <div class="welcome-content">
+
+                    <div class="welcome-label">
+                        WELCOME TO BVC
+                    </div>
+
+                    <h2>
+                        Your Learning.<br>
+                        Your Future.<br>
+                        <span>Your Portal.</span>
+                    </h2>
+
+                    <p>
+                        Access your student dashboard and explore
+                        your academic information through the
+                        BVC Student Portal.
+                    </p>
+
+                    <ul class="features">
+                        <li>
+                            <span class="feature-icon">✓</span>
+                            Student Dashboard
+                        </li>
+
+                        <li>
+                            <span class="feature-icon">✓</span>
+                            Academic Information
+                        </li>
+
+                        <li>
+                            <span class="feature-icon">✓</span>
+                            Easy Portal Access
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+
+            <!-- LOGIN FORM -->
+            <div class="login-panel">
+
+                <div class="login-heading">
+                    <div class="small-title">Student Access</div>
+
+                    <h2>Welcome Back!</h2>
+
+                    <p>
+                        Enter your Student ID and password
+                        to continue.
+                    </p>
+                </div>
+
+                <form id="loginForm">
+
+                    <div class="form-group">
+                        <label for="studentId">Student ID</label>
+
+                        <div class="input-wrap">
+                            <input
+                                type="text"
+                                id="studentId"
+                                name="studentId"
+                                placeholder="Enter your Student ID"
+                                autocomplete="username"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+
+                        <div class="input-wrap">
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                class="password-input"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="toggle-password"
+                                id="togglePassword"
+                                aria-label="Show password"
+                            >
+                                Show
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="login-options">
+                        <label class="remember">
+                            <input type="checkbox" id="rememberMe">
+                            Remember ID
+                        </label>
+
+                        <span class="help-text">
+                            Student Portal
+                        </span>
+                    </div>
+
+                    <button type="submit" class="login-button" id="loginButton">
+                        Sign In to Portal
+                    </button>
+
+                    <div
+                        id="message"
+                        class="message"
+                        role="status"
+                        aria-live="polite"
+                    ></div>
+
+                </form>
+
+                <div class="demo-note">
+                    <strong>Demo Login Credentials</strong>
+                   
+                    <span>
+                        This is a front-end demo, not real authentication.
+                    </span>
+                </div>
+
+            </div>
+
+        </section>
     </main>
 
-    <script src="script.js"></script>
+    <!-- FOOTER -->
+    <footer class="footer">
+        © <span id="year"></span> BVC Student Portal.
+        All rights reserved.
+    </footer>
+
+    
+<script>
+    const loginForm = document.getElementById("loginForm");
+    const studentIdInput = document.getElementById("studentId");
+    const passwordInput = document.getElementById("password");
+    const togglePassword = document.getElementById("togglePassword");
+    const message = document.getElementById("message");
+    const loginButton = document.getElementById("loginButton");
+    const rememberMe = document.getElementById("rememberMe");
+
+    document.getElementById("year").textContent =
+        new Date().getFullYear();
+
+    // Show or hide password
+    togglePassword.addEventListener("click", function () {
+        const isHidden = passwordInput.type === "password";
+        passwordInput.type = isHidden ? "text" : "password";
+        togglePassword.textContent = isHidden ? "Hide" : "Show";
+        togglePassword.setAttribute(
+            "aria-label",
+            isHidden ? "Hide password" : "Show password"
+        );
+    });
+
+    // Restore remembered Student ID
+    try {
+        const savedId = localStorage.getItem("bvcRememberedStudentId");
+        if (savedId) {
+            studentIdInput.value = savedId;
+            rememberMe.checked = true;
+        }
+    } catch (error) {
+        console.warn("Browser storage unavailable.");
+    }
+
+    // Use the existing backend login
+    loginForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const studentId = studentIdInput.value.trim();
+        const password = passwordInput.value;
+
+        message.className = "message";
+        message.textContent = "";
+
+        if (!studentId || !password) {
+            message.className = "message error";
+            message.textContent =
+                "Please enter both Student ID and password.";
+            return;
+        }
+
+        loginButton.disabled = true;
+        loginButton.textContent = "Signing in...";
+
+        try {
+            const response = await fetch("/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    studentId: studentId,
+                    password: password
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                message.className = "message error";
+                message.textContent =
+                    data.error || data.message ||
+                    "Invalid Student ID or password.";
+                return;
+            }
+
+            if (rememberMe.checked) {
+                localStorage.setItem(
+                    "bvcRememberedStudentId",
+                    studentId
+                );
+            } else {
+                localStorage.removeItem("bvcRememberedStudentId");
+            }
+
+            localStorage.setItem("studentId", studentId);
+
+            if (data.student) {
+                localStorage.setItem(
+                    "studentName",
+                    data.student.name || ""
+                );
+                localStorage.setItem(
+                    "studentBranch",
+                    data.student.branch || ""
+                );
+                localStorage.setItem(
+                    "studentYear",
+                    data.student.year || ""
+                );
+            }
+
+            window.location.href = "/dashboard.html";
+        } catch (error) {
+            message.className = "message error";
+            message.textContent =
+                "Unable to connect to the server. Please try again.";
+        } finally {
+            loginButton.disabled = false;
+            loginButton.textContent = "Sign In";
+        }
+    });
+</script>
+
 
 </body>
 </html>
-```

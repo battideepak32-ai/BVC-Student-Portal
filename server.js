@@ -14,7 +14,7 @@ app.use(express.static(__dirname));
 
 
 // ===============================
-// ADMIN LOGIN DETAILS
+// ADMIN AUTHENTICATION
 // ===============================
 
 const ADMIN_USERNAME = "admin";
@@ -24,28 +24,7 @@ let adminToken = null;
 
 
 // ===============================
-// ADMIN AUTHENTICATION
-// ===============================
-
-function requireAdmin(req, res, next) {
-
-    const token = req.headers.authorization;
-
-    if (!adminToken || token !== adminToken) {
-
-        return res.status(403).json({
-            success: false,
-            message: "Admin access required"
-        });
-
-    }
-
-    next();
-}
-
-
-// ===============================
-// ADMIN LOGIN API
+// ADMIN LOGIN
 // ===============================
 
 app.post("/admin-login", (req, res) => {
@@ -58,27 +37,45 @@ app.post("/admin-login", (req, res) => {
     ) {
 
         adminToken =
-            Date.now().toString() +
+            "admin-" +
+            Date.now() +
+            "-" +
             Math.random().toString(36).substring(2);
 
         return res.json({
             success: true,
-            message: "Admin login successful!",
             token: adminToken
         });
-
     }
 
     res.status(401).json({
         success: false,
-        message: "Invalid admin username or password"
+        error: "Invalid admin username or password"
     });
-
 });
 
 
 // ===============================
-// STUDENT LOGIN API
+// ADMIN AUTH MIDDLEWARE
+// ===============================
+
+function requireAdmin(req, res, next) {
+
+    const token = req.headers.authorization;
+
+    if (!token || token !== adminToken) {
+
+        return res.status(403).json({
+            error: "Unauthorized"
+        });
+    }
+
+    next();
+}
+
+
+// ===============================
+// STUDENT LOGIN
 // ===============================
 
 app.post("/login", (req, res) => {
@@ -89,111 +86,142 @@ app.post("/login", (req, res) => {
 
         return res.status(400).json({
             success: false,
-            message: "Student ID and Password are required"
+            error: "Student ID and password are required"
         });
-
     }
 
-    const student = db.prepare(`
+    const sql = `
         SELECT *
         FROM students
         WHERE student_id = ?
-    `).get(studentId);
+        AND password = ?
+    `;
 
-    if (!student) {
+    db.get(
+        sql,
+        [studentId, password],
+        (err, student) => {
 
-        return res.status(401).json({
-            success: false,
-            message: "Invalid Student ID or Password"
-        });
+            if (err) {
 
-    }
+                console.error(err);
 
-    if (student.password !== password) {
+                return res.status(500).json({
+                    success: false,
+                    error: "Database error"
+                });
+            }
 
-        return res.status(401).json({
-            success: false,
-            message: "Invalid Student ID or Password"
-        });
+            if (!student) {
 
-    }
+                return res.status(401).json({
+                    success: false,
+                    error: "Invalid Student ID or Password"
+                });
+            }
 
-    const now = new Date();
 
-    const loginDate = now.toLocaleDateString("en-IN");
-    const loginTime = now.toLocaleTimeString("en-IN");
+            // ===============================
+            // SAVE LOGIN HISTORY
+            // ===============================
 
-    db.prepare(`
-        INSERT INTO login_history
-        (student_id, login_date, login_time)
-        VALUES (?, ?, ?)
-    `).run(
-        studentId,
-        loginDate,
-        loginTime
+            const loginSql = `
+                INSERT INTO login_history
+                (student_id, login_date, login_time)
+                VALUES (?, date('now'), time('now'))
+            `;
+
+            db.run(
+                loginSql,
+                [studentId],
+                (loginErr) => {
+
+                    if (loginErr) {
+                        console.error(
+                            "Login history error:",
+                            loginErr
+                        );
+                    }
+
+                    res.json({
+                        success: true,
+                        student: student
+                    });
+                }
+            );
+        }
     );
-
-    res.json({
-
-        success: true,
-
-        message: "Login successful!",
-
-        student: {
-            studentId: student.student_id,
-            name: student.name,
-            branch: student.branch,
-            year: student.year,
-            section: student.section
-        },
-
-        loginDate,
-        loginTime
-
-    });
-
 });
 
 
 // ======================================================
-// STUDENT MANAGEMENT
+// STUDENTS
 // ======================================================
 
 
-// ===============================
-// ADD STUDENT
-// ===============================
+// GET ALL STUDENTS
 
-app.post("/api/students", requireAdmin, (req, res) => {
+app.get(
+    "/api/students",
+    requireAdmin,
+    (req, res) => {
 
-    const {
-        studentId,
-        name,
-        branch,
-        year,
-        section,
-        password
-    } = req.body;
+        db.all(
+            `SELECT id, student_id, name, branch, year, section
+             FROM students
+             ORDER BY id DESC`,
+            [],
+            (err, rows) => {
 
-    if (
-        !studentId ||
-        !name ||
-        !branch ||
-        !year ||
-        !section ||
-        !password
-    ) {
+                if (err) {
 
-        return res.status(400).json({
-            success: false,
-            message: "All student details are required"
-        });
+                    console.error(err);
 
+                    return res.status(500).json({
+                        error: "Database error"
+                    });
+                }
+
+                res.json(rows);
+            }
+        );
     }
+);
 
-    try {
 
-        db.prepare(`
+// ADD STUDENT
+
+app.post(
+    "/api/students",
+    requireAdmin,
+    (req, res) => {
+
+        const {
+            student_id,
+            name,
+            branch,
+            year,
+            section,
+            password
+        } = req.body;
+
+
+        if (
+            !student_id ||
+            !name ||
+            !branch ||
+            !year ||
+            !section ||
+            !password
+        ) {
+
+            return res.status(400).json({
+                error: "All fields are required"
+            });
+        }
+
+
+        const sql = `
             INSERT INTO students
             (
                 student_id,
@@ -204,82 +232,42 @@ app.post("/api/students", requireAdmin, (req, res) => {
                 password
             )
             VALUES (?, ?, ?, ?, ?, ?)
-        `).run(
-            studentId,
-            name,
-            branch,
-            year,
-            section,
-            password
-        );
-
-        res.json({
-            success: true,
-            message: "Student added successfully!"
-        });
-
-    } catch (error) {
-
-        if (error.message.includes("UNIQUE")) {
-
-            return res.status(409).json({
-                success: false,
-                message: "Student ID already exists"
-            });
-
-        }
-
-        console.error("Add student error:", error);
-
-        res.status(500).json({
-            success: false,
-            message: "Failed to add student"
-        });
-
-    }
-
-});
+        `;
 
 
-// ===============================
-// GET ALL STUDENTS
-// ===============================
-
-app.get("/api/students", requireAdmin, (req, res) => {
-
-    try {
-
-        const students = db.prepare(`
-            SELECT
-                id,
+        db.run(
+            sql,
+            [
                 student_id,
                 name,
                 branch,
                 year,
-                section
-            FROM students
-            ORDER BY id DESC
-        `).all();
+                section,
+                password
+            ],
+            function (err) {
 
-        res.json(students);
+                if (err) {
 
-    } catch (error) {
+                    console.error(err);
 
-        console.error("Get students error:", error);
+                    return res.status(400).json({
+                        error: err.message
+                    });
+                }
 
-        res.status(500).json({
-            success: false,
-            message: "Failed to fetch students"
-        });
 
+                res.json({
+                    success: true,
+                    id: this.lastID
+                });
+            }
+        );
     }
+);
 
-});
 
-
-// ===============================
 // DELETE STUDENT
-// ===============================
 
 app.delete(
     "/api/students/:studentId",
@@ -288,143 +276,44 @@ app.delete(
 
         const { studentId } = req.params;
 
-        try {
+        db.run(
+            `DELETE FROM students
+             WHERE student_id = ?`,
+            [studentId],
+            function (err) {
 
-            const result = db.prepare(`
-                DELETE FROM students
-                WHERE student_id = ?
-            `).run(studentId);
+                if (err) {
 
-            if (result.changes === 0) {
+                    console.error(err);
 
-                return res.status(404).json({
-                    success: false,
-                    message: "Student not found"
+                    return res.status(500).json({
+                        error: "Database error"
+                    });
+                }
+
+                res.json({
+                    success: true,
+                    deleted: this.changes
                 });
-
             }
-
-            res.json({
-                success: true,
-                message: "Student deleted successfully!"
-            });
-
-        } catch (error) {
-
-            console.error("Delete student error:", error);
-
-            res.status(500).json({
-                success: false,
-                message: "Failed to delete student"
-            });
-
-        }
-
+        );
     }
 );
 
 
 // ======================================================
-// SUBJECTS MANAGEMENT
+// SUBJECTS
 // ======================================================
 
 
-// ===============================
-// ADD SUBJECT
-// ===============================
+// GET ALL SUBJECTS
 
-app.post("/api/subjects", requireAdmin, (req, res) => {
+app.get(
+    "/api/subjects",
+    requireAdmin,
+    (req, res) => {
 
-    const {
-        studentId,
-        subjectCode,
-        subjectName,
-        faculty
-    } = req.body;
-
-    if (
-        !studentId ||
-        !subjectCode ||
-        !subjectName
-    ) {
-
-        return res.status(400).json({
-            success: false,
-            message: "Student ID, Subject Code and Subject Name are required"
-        });
-
-    }
-
-    try {
-
-        const student = db.prepare(`
-            SELECT student_id
-            FROM students
-            WHERE student_id = ?
-        `).get(studentId);
-
-        if (!student) {
-
-            return res.status(404).json({
-                success: false,
-                message: "Student not found"
-            });
-
-        }
-
-        db.prepare(`
-            INSERT INTO subjects
-            (
-                student_id,
-                subject_code,
-                subject_name,
-                faculty
-            )
-            VALUES (?, ?, ?, ?)
-        `).run(
-            studentId,
-            subjectCode,
-            subjectName,
-            faculty || ""
-        );
-
-        res.json({
-            success: true,
-            message: "Subject added successfully!"
-        });
-
-    } catch (error) {
-
-        if (error.message.includes("UNIQUE")) {
-
-            return res.status(409).json({
-                success: false,
-                message: "This subject already exists for this student"
-            });
-
-        }
-
-        console.error("Add subject error:", error);
-
-        res.status(500).json({
-            success: false,
-            message: "Failed to add subject"
-        });
-
-    }
-
-});
-
-
-// ===============================
-// GET ALL SUBJECTS - ADMIN
-// ===============================
-
-app.get("/api/subjects", requireAdmin, (req, res) => {
-
-    try {
-
-        const subjects = db.prepare(`
+        const sql = `
             SELECT
                 subjects.id,
                 subjects.student_id,
@@ -434,278 +323,226 @@ app.get("/api/subjects", requireAdmin, (req, res) => {
                 subjects.faculty
             FROM subjects
             LEFT JOIN students
-                ON subjects.student_id = students.student_id
+            ON subjects.student_id = students.student_id
             ORDER BY subjects.id DESC
-        `).all();
-
-        res.json(subjects);
-
-    } catch (error) {
-
-        console.error("Get subjects error:", error);
-
-        res.status(500).json({
-            success: false,
-            message: "Failed to fetch subjects"
-        });
-
-    }
-
-});
+        `;
 
 
-// ===============================
-// GET SUBJECTS BY STUDENT
-// ===============================
+        db.all(
+            sql,
+            [],
+            (err, rows) => {
 
-app.get("/api/subjects/:studentId", (req, res) => {
+                if (err) {
 
-    try {
+                    console.error(err);
 
-        const subjects = db.prepare(`
-            SELECT
-                id,
-                student_id,
-                subject_code,
-                subject_name,
-                faculty
-            FROM subjects
-            WHERE student_id = ?
-            ORDER BY id DESC
-        `).all(req.params.studentId);
+                    return res.status(500).json({
+                        error: "Database error"
+                    });
+                }
 
-        res.json(subjects);
-
-    } catch (error) {
-
-        console.error("Student subjects error:", error);
-
-        res.status(500).json({
-            success: false,
-            message: "Failed to fetch subjects"
-        });
-
-    }
-
-});
-
-
-// ===============================
-// UPDATE SUBJECT
-// ===============================
-
-app.put("/api/subjects/:id", requireAdmin, (req, res) => {
-
-    const {
-        subjectCode,
-        subjectName,
-        faculty
-    } = req.body;
-
-    try {
-
-        const result = db.prepare(`
-            UPDATE subjects
-            SET
-                subject_code = ?,
-                subject_name = ?,
-                faculty = ?
-            WHERE id = ?
-        `).run(
-            subjectCode,
-            subjectName,
-            faculty || "",
-            req.params.id
+                res.json(rows);
+            }
         );
-
-        if (result.changes === 0) {
-
-            return res.status(404).json({
-                success: false,
-                message: "Subject not found"
-            });
-
-        }
-
-        res.json({
-            success: true,
-            message: "Subject updated successfully!"
-        });
-
-    } catch (error) {
-
-        console.error("Update subject error:", error);
-
-        res.status(500).json({
-            success: false,
-            message: "Failed to update subject"
-        });
-
     }
+);
 
-});
 
+// GET SUBJECTS FOR STUDENT
 
-// ===============================
-// DELETE SUBJECT
-// ===============================
+app.get(
+    "/api/subjects/:studentId",
+    (req, res) => {
 
-app.delete("/api/subjects/:id", requireAdmin, (req, res) => {
+        const { studentId } = req.params;
 
-    try {
+        db.all(
+            `SELECT *
+             FROM subjects
+             WHERE student_id = ?
+             ORDER BY id DESC`,
+            [studentId],
+            (err, rows) => {
 
-        const result = db.prepare(`
-            DELETE FROM subjects
-            WHERE id = ?
-        `).run(req.params.id);
+                if (err) {
 
-        if (result.changes === 0) {
+                    console.error(err);
 
-            return res.status(404).json({
-                success: false,
-                message: "Subject not found"
-            });
+                    return res.status(500).json({
+                        error: "Database error"
+                    });
+                }
 
-        }
-
-        res.json({
-            success: true,
-            message: "Subject deleted successfully!"
-        });
-
-    } catch (error) {
-
-        console.error("Delete subject error:", error);
-
-        res.status(500).json({
-            success: false,
-            message: "Failed to delete subject"
-        });
-
+                res.json(rows);
+            }
+        );
     }
-
-});
-
-
-// ======================================================
-// ATTENDANCE MANAGEMENT
-// ======================================================
+);
 
 
-// ===============================
-// ADD ATTENDANCE
-// ===============================
+// ADD SUBJECT
 
-app.post("/api/attendance", requireAdmin, (req, res) => {
+app.post(
+    "/api/subjects",
+    requireAdmin,
+    (req, res) => {
 
-    const {
-        studentId,
-        subjectCode,
-        subjectName,
-        totalClasses,
-        attendedClasses
-    } = req.body;
+        const {
+            student_id,
+            subject_code,
+            subject_name,
+            faculty
+        } = req.body;
 
-    if (
-        !studentId ||
-        !subjectCode ||
-        !subjectName ||
-        totalClasses === undefined ||
-        attendedClasses === undefined
-    ) {
 
-        return res.status(400).json({
-            success: false,
-            message: "All attendance details are required"
-        });
-
-    }
-
-    if (
-        Number(totalClasses) < 0 ||
-        Number(attendedClasses) < 0 ||
-        Number(attendedClasses) > Number(totalClasses)
-    ) {
-
-        return res.status(400).json({
-            success: false,
-            message: "Invalid attendance values"
-        });
-
-    }
-
-    try {
-
-        const student = db.prepare(`
-            SELECT student_id
-            FROM students
-            WHERE student_id = ?
-        `).get(studentId);
-
-        if (!student) {
-
-            return res.status(404).json({
-                success: false,
-                message: "Student not found"
-            });
-
-        }
-
-        db.prepare(`
-            INSERT INTO attendance
+        const sql = `
+            INSERT INTO subjects
             (
                 student_id,
                 subject_code,
                 subject_name,
-                total_classes,
-                attended_classes
+                faculty
             )
-            VALUES (?, ?, ?, ?, ?)
-        `).run(
-            studentId,
-            subjectCode,
-            subjectName,
-            Number(totalClasses),
-            Number(attendedClasses)
+            VALUES (?, ?, ?, ?)
+        `;
+
+
+        db.run(
+            sql,
+            [
+                student_id,
+                subject_code,
+                subject_name,
+                faculty
+            ],
+            function (err) {
+
+                if (err) {
+
+                    console.error(err);
+
+                    return res.status(400).json({
+                        error: err.message
+                    });
+                }
+
+
+                res.json({
+                    success: true,
+                    id: this.lastID
+                });
+            }
         );
-
-        res.json({
-            success: true,
-            message: "Attendance added successfully!"
-        });
-
-    } catch (error) {
-
-        if (error.message.includes("UNIQUE")) {
-
-            return res.status(409).json({
-                success: false,
-                message: "Attendance for this subject already exists"
-            });
-
-        }
-
-        console.error("Add attendance error:", error);
-
-        res.status(500).json({
-            success: false,
-            message: "Failed to add attendance"
-        });
-
     }
+);
 
-});
+
+// UPDATE SUBJECT
+
+app.put(
+    "/api/subjects/:id",
+    requireAdmin,
+    (req, res) => {
+
+        const { id } = req.params;
+
+        const {
+            student_id,
+            subject_code,
+            subject_name,
+            faculty
+        } = req.body;
 
 
-// ===============================
-// GET ALL ATTENDANCE - ADMIN
-// ===============================
+        const sql = `
+            UPDATE subjects
+            SET
+                student_id = ?,
+                subject_code = ?,
+                subject_name = ?,
+                faculty = ?
+            WHERE id = ?
+        `;
 
-app.get("/api/attendance", requireAdmin, (req, res) => {
 
-    try {
+        db.run(
+            sql,
+            [
+                student_id,
+                subject_code,
+                subject_name,
+                faculty,
+                id
+            ],
+            function (err) {
 
-        const records = db.prepare(`
+                if (err) {
+
+                    console.error(err);
+
+                    return res.status(500).json({
+                        error: err.message
+                    });
+                }
+
+
+                res.json({
+                    success: true,
+                    updated: this.changes
+                });
+            }
+        );
+    }
+);
+
+
+// DELETE SUBJECT
+
+app.delete(
+    "/api/subjects/:id",
+    requireAdmin,
+    (req, res) => {
+
+        db.run(
+            `DELETE FROM subjects
+             WHERE id = ?`,
+            [req.params.id],
+            function (err) {
+
+                if (err) {
+
+                    console.error(err);
+
+                    return res.status(500).json({
+                        error: "Database error"
+                    });
+                }
+
+
+                res.json({
+                    success: true,
+                    deleted: this.changes
+                });
+            }
+        );
+    }
+);
+
+
+// ======================================================
+// ATTENDANCE
+// ======================================================
+
+
+// GET ALL ATTENDANCE
+
+app.get(
+    "/api/attendance",
+    requireAdmin,
+    (req, res) => {
+
+        const sql = `
             SELECT
                 attendance.id,
                 attendance.student_id,
@@ -716,300 +553,228 @@ app.get("/api/attendance", requireAdmin, (req, res) => {
                 attendance.attended_classes
             FROM attendance
             LEFT JOIN students
-                ON attendance.student_id = students.student_id
+            ON attendance.student_id = students.student_id
             ORDER BY attendance.id DESC
-        `).all();
+        `;
 
-        res.json(records);
 
-    } catch (error) {
+        db.all(
+            sql,
+            [],
+            (err, rows) => {
 
-        console.error("Get attendance error:", error);
+                if (err) {
 
-        res.status(500).json({
-            success: false,
-            message: "Failed to fetch attendance"
-        });
+                    console.error(err);
 
+                    return res.status(500).json({
+                        error: "Database error"
+                    });
+                }
+
+                res.json(rows);
+            }
+        );
     }
+);
 
-});
+
+// GET ATTENDANCE FOR STUDENT
+
+app.get(
+    "/api/attendance/:studentId",
+    (req, res) => {
+
+        db.all(
+            `SELECT *
+             FROM attendance
+             WHERE student_id = ?
+             ORDER BY id DESC`,
+            [req.params.studentId],
+            (err, rows) => {
+
+                if (err) {
+
+                    console.error(err);
+
+                    return res.status(500).json({
+                        error: "Database error"
+                    });
+                }
+
+                res.json(rows);
+            }
+        );
+    }
+);
 
 
-// ===============================
-// GET ATTENDANCE BY STUDENT
-// ===============================
+// ADD ATTENDANCE
 
-app.get("/api/attendance/:studentId", (req, res) => {
+app.post(
+    "/api/attendance",
+    requireAdmin,
+    (req, res) => {
 
-    try {
+        const {
+            student_id,
+            subject_code,
+            subject_name,
+            total_classes,
+            attended_classes
+        } = req.body;
 
-        const records = db.prepare(`
-            SELECT
-                id,
+
+        const sql = `
+            INSERT INTO attendance
+            (
                 student_id,
                 subject_code,
                 subject_name,
                 total_classes,
                 attended_classes
-            FROM attendance
-            WHERE student_id = ?
-            ORDER BY id DESC
-        `).all(req.params.studentId);
+            )
+            VALUES (?, ?, ?, ?, ?)
+        `;
 
-        res.json(records);
 
-    } catch (error) {
+        db.run(
+            sql,
+            [
+                student_id,
+                subject_code,
+                subject_name,
+                total_classes,
+                attended_classes
+            ],
+            function (err) {
 
-        console.error("Student attendance error:", error);
+                if (err) {
 
-        res.status(500).json({
-            success: false,
-            message: "Failed to fetch attendance"
-        });
+                    console.error(err);
 
+                    return res.status(400).json({
+                        error: err.message
+                    });
+                }
+
+
+                res.json({
+                    success: true,
+                    id: this.lastID
+                });
+            }
+        );
     }
+);
 
-});
 
-
-// ===============================
 // UPDATE ATTENDANCE
-// ===============================
 
-app.put("/api/attendance/:id", requireAdmin, (req, res) => {
+app.put(
+    "/api/attendance/:id",
+    requireAdmin,
+    (req, res) => {
 
-    const {
-        subjectCode,
-        subjectName,
-        totalClasses,
-        attendedClasses
-    } = req.body;
+        const {
+            student_id,
+            subject_code,
+            subject_name,
+            total_classes,
+            attended_classes
+        } = req.body;
 
-    if (
-        Number(totalClasses) < 0 ||
-        Number(attendedClasses) < 0 ||
-        Number(attendedClasses) > Number(totalClasses)
-    ) {
 
-        return res.status(400).json({
-            success: false,
-            message: "Invalid attendance values"
-        });
-
-    }
-
-    try {
-
-        const result = db.prepare(`
+        const sql = `
             UPDATE attendance
             SET
+                student_id = ?,
                 subject_code = ?,
                 subject_name = ?,
                 total_classes = ?,
                 attended_classes = ?
             WHERE id = ?
-        `).run(
-            subjectCode,
-            subjectName,
-            Number(totalClasses),
-            Number(attendedClasses),
-            req.params.id
-        );
-
-        if (result.changes === 0) {
-
-            return res.status(404).json({
-                success: false,
-                message: "Attendance record not found"
-            });
-
-        }
-
-        res.json({
-            success: true,
-            message: "Attendance updated successfully!"
-        });
-
-    } catch (error) {
-
-        console.error("Update attendance error:", error);
-
-        res.status(500).json({
-            success: false,
-            message: "Failed to update attendance"
-        });
-
-    }
-
-});
+        `;
 
 
-// ===============================
-// DELETE ATTENDANCE
-// ===============================
-
-app.delete("/api/attendance/:id", requireAdmin, (req, res) => {
-
-    try {
-
-        const result = db.prepare(`
-            DELETE FROM attendance
-            WHERE id = ?
-        `).run(req.params.id);
-
-        if (result.changes === 0) {
-
-            return res.status(404).json({
-                success: false,
-                message: "Attendance record not found"
-            });
-
-        }
-
-        res.json({
-            success: true,
-            message: "Attendance deleted successfully!"
-        });
-
-    } catch (error) {
-
-        console.error("Delete attendance error:", error);
-
-        res.status(500).json({
-            success: false,
-            message: "Failed to delete attendance"
-        });
-
-    }
-
-});
-
-
-// ======================================================
-// RESULTS MANAGEMENT
-// ======================================================
-
-
-// ===============================
-// ADD RESULT
-// ===============================
-
-app.post("/api/results", requireAdmin, (req, res) => {
-
-    const {
-        studentId,
-        subjectCode,
-        subjectName,
-        marks,
-        maxMarks,
-        grade
-    } = req.body;
-
-    if (
-        !studentId ||
-        !subjectCode ||
-        !subjectName ||
-        marks === undefined
-    ) {
-
-        return res.status(400).json({
-            success: false,
-            message: "Student, subject and marks are required"
-        });
-
-    }
-
-    const maximum = maxMarks === undefined ? 100 : Number(maxMarks);
-    const obtained = Number(marks);
-
-    if (
-        obtained < 0 ||
-        maximum <= 0 ||
-        obtained > maximum
-    ) {
-
-        return res.status(400).json({
-            success: false,
-            message: "Invalid marks"
-        });
-
-    }
-
-    try {
-
-        const student = db.prepare(`
-            SELECT student_id
-            FROM students
-            WHERE student_id = ?
-        `).get(studentId);
-
-        if (!student) {
-
-            return res.status(404).json({
-                success: false,
-                message: "Student not found"
-            });
-
-        }
-
-        db.prepare(`
-            INSERT INTO results
-            (
+        db.run(
+            sql,
+            [
                 student_id,
                 subject_code,
                 subject_name,
-                marks,
-                max_marks,
-                grade
-            )
-            VALUES (?, ?, ?, ?, ?, ?)
-        `).run(
-            studentId,
-            subjectCode,
-            subjectName,
-            obtained,
-            maximum,
-            grade || ""
+                total_classes,
+                attended_classes,
+                req.params.id
+            ],
+            function (err) {
+
+                if (err) {
+
+                    console.error(err);
+
+                    return res.status(500).json({
+                        error: err.message
+                    });
+                }
+
+
+                res.json({
+                    success: true,
+                    updated: this.changes
+                });
+            }
         );
-
-        res.json({
-            success: true,
-            message: "Result added successfully!"
-        });
-
-    } catch (error) {
-
-        if (error.message.includes("UNIQUE")) {
-
-            return res.status(409).json({
-                success: false,
-                message: "Result for this subject already exists"
-            });
-
-        }
-
-        console.error("Add result error:", error);
-
-        res.status(500).json({
-            success: false,
-            message: "Failed to add result"
-        });
-
     }
+);
 
-});
+
+// DELETE ATTENDANCE
+
+app.delete(
+    "/api/attendance/:id",
+    requireAdmin,
+    (req, res) => {
+
+        db.run(
+            `DELETE FROM attendance
+             WHERE id = ?`,
+            [req.params.id],
+            function (err) {
+
+                if (err) {
+
+                    console.error(err);
+
+                    return res.status(500).json({
+                        error: "Database error"
+                    });
+                }
 
 
-// ===============================
-// GET ALL RESULTS - ADMIN
-// ===============================
+                res.json({
+                    success: true,
+                    deleted: this.changes
+                });
+            }
+        );
+    }
+);
 
-app.get("/api/results", requireAdmin, (req, res) => {
 
-    try {
+// ======================================================
+// RESULTS
+// ======================================================
 
-        const records = db.prepare(`
+
+// GET ALL RESULTS
+
+app.get(
+    "/api/results",
+    requireAdmin,
+    (req, res) => {
+
+        const sql = `
             SELECT
                 results.id,
                 results.student_id,
@@ -1021,290 +786,234 @@ app.get("/api/results", requireAdmin, (req, res) => {
                 results.grade
             FROM results
             LEFT JOIN students
-                ON results.student_id = students.student_id
+            ON results.student_id = students.student_id
             ORDER BY results.id DESC
-        `).all();
+        `;
 
-        res.json(records);
 
-    } catch (error) {
+        db.all(
+            sql,
+            [],
+            (err, rows) => {
 
-        console.error("Get results error:", error);
+                if (err) {
 
-        res.status(500).json({
-            success: false,
-            message: "Failed to fetch results"
-        });
+                    console.error(err);
 
+                    return res.status(500).json({
+                        error: "Database error"
+                    });
+                }
+
+                res.json(rows);
+            }
+        );
     }
+);
 
-});
+
+// GET RESULTS FOR STUDENT
+
+app.get(
+    "/api/results/:studentId",
+    (req, res) => {
+
+        db.all(
+            `SELECT *
+             FROM results
+             WHERE student_id = ?
+             ORDER BY id DESC`,
+            [req.params.studentId],
+            (err, rows) => {
+
+                if (err) {
+
+                    console.error(err);
+
+                    return res.status(500).json({
+                        error: "Database error"
+                    });
+                }
+
+                res.json(rows);
+            }
+        );
+    }
+);
 
 
-// ===============================
-// GET RESULTS BY STUDENT
-// ===============================
+// ADD RESULT
 
-app.get("/api/results/:studentId", (req, res) => {
+app.post(
+    "/api/results",
+    requireAdmin,
+    (req, res) => {
 
-    try {
+        const {
+            student_id,
+            subject_code,
+            subject_name,
+            marks,
+            max_marks,
+            grade
+        } = req.body;
 
-        const records = db.prepare(`
-            SELECT
-                id,
+
+        const sql = `
+            INSERT INTO results
+            (
                 student_id,
                 subject_code,
                 subject_name,
                 marks,
                 max_marks,
                 grade
-            FROM results
-            WHERE student_id = ?
-            ORDER BY id DESC
-        `).all(req.params.studentId);
+            )
+            VALUES (?, ?, ?, ?, ?, ?)
+        `;
 
-        res.json(records);
 
-    } catch (error) {
+        db.run(
+            sql,
+            [
+                student_id,
+                subject_code,
+                subject_name,
+                marks,
+                max_marks,
+                grade
+            ],
+            function (err) {
 
-        console.error("Student results error:", error);
+                if (err) {
 
-        res.status(500).json({
-            success: false,
-            message: "Failed to fetch results"
-        });
+                    console.error(err);
 
+                    return res.status(400).json({
+                        error: err.message
+                    });
+                }
+
+
+                res.json({
+                    success: true,
+                    id: this.lastID
+                });
+            }
+        );
     }
+);
 
-});
 
-
-// ===============================
 // UPDATE RESULT
-// ===============================
 
-app.put("/api/results/:id", requireAdmin, (req, res) => {
+app.put(
+    "/api/results/:id",
+    requireAdmin,
+    (req, res) => {
 
-    const {
-        subjectCode,
-        subjectName,
-        marks,
-        maxMarks,
-        grade
-    } = req.body;
+        const {
+            student_id,
+            subject_code,
+            subject_name,
+            marks,
+            max_marks,
+            grade
+        } = req.body;
 
-    const maximum = maxMarks === undefined ? 100 : Number(maxMarks);
-    const obtained = Number(marks);
 
-    if (
-        obtained < 0 ||
-        maximum <= 0 ||
-        obtained > maximum
-    ) {
-
-        return res.status(400).json({
-            success: false,
-            message: "Invalid marks"
-        });
-
-    }
-
-    try {
-
-        const result = db.prepare(`
+        const sql = `
             UPDATE results
             SET
+                student_id = ?,
                 subject_code = ?,
                 subject_name = ?,
                 marks = ?,
                 max_marks = ?,
                 grade = ?
             WHERE id = ?
-        `).run(
-            subjectCode,
-            subjectName,
-            obtained,
-            maximum,
-            grade || "",
-            req.params.id
-        );
-
-        if (result.changes === 0) {
-
-            return res.status(404).json({
-                success: false,
-                message: "Result not found"
-            });
-
-        }
-
-        res.json({
-            success: true,
-            message: "Result updated successfully!"
-        });
-
-    } catch (error) {
-
-        console.error("Update result error:", error);
-
-        res.status(500).json({
-            success: false,
-            message: "Failed to update result"
-        });
-
-    }
-
-});
+        `;
 
 
-// ===============================
-// DELETE RESULT
-// ===============================
-
-app.delete("/api/results/:id", requireAdmin, (req, res) => {
-
-    try {
-
-        const result = db.prepare(`
-            DELETE FROM results
-            WHERE id = ?
-        `).run(req.params.id);
-
-        if (result.changes === 0) {
-
-            return res.status(404).json({
-                success: false,
-                message: "Result not found"
-            });
-
-        }
-
-        res.json({
-            success: true,
-            message: "Result deleted successfully!"
-        });
-
-    } catch (error) {
-
-        console.error("Delete result error:", error);
-
-        res.status(500).json({
-            success: false,
-            message: "Failed to delete result"
-        });
-
-    }
-
-});
-
-
-// ======================================================
-// TIMETABLE MANAGEMENT
-// ======================================================
-
-
-// ===============================
-// ADD TIMETABLE
-// ===============================
-
-app.post("/api/timetable", requireAdmin, (req, res) => {
-
-    const {
-        studentId,
-        day,
-        startTime,
-        endTime,
-        subjectCode,
-        subjectName,
-        faculty,
-        room
-    } = req.body;
-
-    if (
-        !studentId ||
-        !day ||
-        !startTime ||
-        !endTime ||
-        !subjectCode ||
-        !subjectName
-    ) {
-
-        return res.status(400).json({
-            success: false,
-            message: "Required timetable details are missing"
-        });
-
-    }
-
-    try {
-
-        const student = db.prepare(`
-            SELECT student_id
-            FROM students
-            WHERE student_id = ?
-        `).get(studentId);
-
-        if (!student) {
-
-            return res.status(404).json({
-                success: false,
-                message: "Student not found"
-            });
-
-        }
-
-        db.prepare(`
-            INSERT INTO timetable
-            (
+        db.run(
+            sql,
+            [
                 student_id,
-                day,
-                start_time,
-                end_time,
                 subject_code,
                 subject_name,
-                faculty,
-                room
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        `).run(
-            studentId,
-            day,
-            startTime,
-            endTime,
-            subjectCode,
-            subjectName,
-            faculty || "",
-            room || ""
+                marks,
+                max_marks,
+                grade,
+                req.params.id
+            ],
+            function (err) {
+
+                if (err) {
+
+                    console.error(err);
+
+                    return res.status(500).json({
+                        error: err.message
+                    });
+                }
+
+
+                res.json({
+                    success: true,
+                    updated: this.changes
+                });
+            }
         );
-
-        res.json({
-            success: true,
-            message: "Timetable added successfully!"
-        });
-
-    } catch (error) {
-
-        console.error("Add timetable error:", error);
-
-        res.status(500).json({
-            success: false,
-            message: "Failed to add timetable"
-        });
-
     }
+);
 
-});
+
+// DELETE RESULT
+
+app.delete(
+    "/api/results/:id",
+    requireAdmin,
+    (req, res) => {
+
+        db.run(
+            `DELETE FROM results
+             WHERE id = ?`,
+            [req.params.id],
+            function (err) {
+
+                if (err) {
+
+                    console.error(err);
+
+                    return res.status(500).json({
+                        error: "Database error"
+                    });
+                }
 
 
-// ===============================
-// GET ALL TIMETABLE - ADMIN
-// ===============================
+                res.json({
+                    success: true,
+                    deleted: this.changes
+                });
+            }
+        );
+    }
+);
 
-app.get("/api/timetable", requireAdmin, (req, res) => {
 
-    try {
+// ======================================================
+// TIMETABLE
+// ======================================================
 
-        const records = db.prepare(`
+
+// GET ALL TIMETABLE
+
+app.get(
+    "/api/timetable",
+    requireAdmin,
+    (req, res) => {
+
+        const sql = `
             SELECT
                 timetable.id,
                 timetable.student_id,
@@ -1318,38 +1027,84 @@ app.get("/api/timetable", requireAdmin, (req, res) => {
                 timetable.room
             FROM timetable
             LEFT JOIN students
-                ON timetable.student_id = students.student_id
-            ORDER BY
-                timetable.id DESC
-        `).all();
+            ON timetable.student_id = students.student_id
+            ORDER BY timetable.id DESC
+        `;
 
-        res.json(records);
 
-    } catch (error) {
+        db.all(
+            sql,
+            [],
+            (err, rows) => {
 
-        console.error("Get timetable error:", error);
+                if (err) {
 
-        res.status(500).json({
-            success: false,
-            message: "Failed to fetch timetable"
-        });
+                    console.error(err);
 
+                    return res.status(500).json({
+                        error: "Database error"
+                    });
+                }
+
+                res.json(rows);
+            }
+        );
     }
+);
 
-});
+
+// GET TIMETABLE FOR STUDENT
+
+app.get(
+    "/api/timetable/:studentId",
+    (req, res) => {
+
+        db.all(
+            `SELECT *
+             FROM timetable
+             WHERE student_id = ?
+             ORDER BY id DESC`,
+            [req.params.studentId],
+            (err, rows) => {
+
+                if (err) {
+
+                    console.error(err);
+
+                    return res.status(500).json({
+                        error: "Database error"
+                    });
+                }
+
+                res.json(rows);
+            }
+        );
+    }
+);
 
 
-// ===============================
-// GET TIMETABLE BY STUDENT
-// ===============================
+// ADD TIMETABLE
 
-app.get("/api/timetable/:studentId", (req, res) => {
+app.post(
+    "/api/timetable",
+    requireAdmin,
+    (req, res) => {
 
-    try {
+        const {
+            student_id,
+            day,
+            start_time,
+            end_time,
+            subject_code,
+            subject_name,
+            faculty,
+            room
+        } = req.body;
 
-        const records = db.prepare(`
-            SELECT
-                id,
+
+        const sql = `
+            INSERT INTO timetable
+            (
                 student_id,
                 day,
                 start_time,
@@ -1358,48 +1113,68 @@ app.get("/api/timetable/:studentId", (req, res) => {
                 subject_name,
                 faculty,
                 room
-            FROM timetable
-            WHERE student_id = ?
-            ORDER BY id ASC
-        `).all(req.params.studentId);
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `;
 
-        res.json(records);
 
-    } catch (error) {
+        db.run(
+            sql,
+            [
+                student_id,
+                day,
+                start_time,
+                end_time,
+                subject_code,
+                subject_name,
+                faculty,
+                room
+            ],
+            function (err) {
 
-        console.error("Student timetable error:", error);
+                if (err) {
 
-        res.status(500).json({
-            success: false,
-            message: "Failed to fetch timetable"
-        });
+                    console.error(err);
 
+                    return res.status(400).json({
+                        error: err.message
+                    });
+                }
+
+
+                res.json({
+                    success: true,
+                    id: this.lastID
+                });
+            }
+        );
     }
+);
 
-});
 
-
-// ===============================
 // UPDATE TIMETABLE
-// ===============================
 
-app.put("/api/timetable/:id", requireAdmin, (req, res) => {
+app.put(
+    "/api/timetable/:id",
+    requireAdmin,
+    (req, res) => {
 
-    const {
-        day,
-        startTime,
-        endTime,
-        subjectCode,
-        subjectName,
-        faculty,
-        room
-    } = req.body;
+        const {
+            student_id,
+            day,
+            start_time,
+            end_time,
+            subject_code,
+            subject_name,
+            faculty,
+            room
+        } = req.body;
 
-    try {
 
-        const result = db.prepare(`
+        const sql = `
             UPDATE timetable
             SET
+                student_id = ?,
                 day = ?,
                 start_time = ?,
                 end_time = ?,
@@ -1408,129 +1183,121 @@ app.put("/api/timetable/:id", requireAdmin, (req, res) => {
                 faculty = ?,
                 room = ?
             WHERE id = ?
-        `).run(
-            day,
-            startTime,
-            endTime,
-            subjectCode,
-            subjectName,
-            faculty || "",
-            room || "",
-            req.params.id
+        `;
+
+
+        db.run(
+            sql,
+            [
+                student_id,
+                day,
+                start_time,
+                end_time,
+                subject_code,
+                subject_name,
+                faculty,
+                room,
+                req.params.id
+            ],
+            function (err) {
+
+                if (err) {
+
+                    console.error(err);
+
+                    return res.status(500).json({
+                        error: err.message
+                    });
+                }
+
+
+                res.json({
+                    success: true,
+                    updated: this.changes
+                });
+            }
         );
-
-        if (result.changes === 0) {
-
-            return res.status(404).json({
-                success: false,
-                message: "Timetable record not found"
-            });
-
-        }
-
-        res.json({
-            success: true,
-            message: "Timetable updated successfully!"
-        });
-
-    } catch (error) {
-
-        console.error("Update timetable error:", error);
-
-        res.status(500).json({
-            success: false,
-            message: "Failed to update timetable"
-        });
-
     }
+);
 
-});
 
-
-// ===============================
 // DELETE TIMETABLE
-// ===============================
 
-app.delete("/api/timetable/:id", requireAdmin, (req, res) => {
+app.delete(
+    "/api/timetable/:id",
+    requireAdmin,
+    (req, res) => {
 
-    try {
+        db.run(
+            `DELETE FROM timetable
+             WHERE id = ?`,
+            [req.params.id],
+            function (err) {
 
-        const result = db.prepare(`
-            DELETE FROM timetable
-            WHERE id = ?
-        `).run(req.params.id);
+                if (err) {
 
-        if (result.changes === 0) {
+                    console.error(err);
 
-            return res.status(404).json({
-                success: false,
-                message: "Timetable record not found"
-            });
+                    return res.status(500).json({
+                        error: "Database error"
+                    });
+                }
 
-        }
 
-        res.json({
-            success: true,
-            message: "Timetable deleted successfully!"
-        });
-
-    } catch (error) {
-
-        console.error("Delete timetable error:", error);
-
-        res.status(500).json({
-            success: false,
-            message: "Failed to delete timetable"
-        });
-
+                res.json({
+                    success: true,
+                    deleted: this.changes
+                });
+            }
+        );
     }
-
-});
+);
 
 
 // ======================================================
 // LOGIN HISTORY
 // ======================================================
 
+app.get(
+    "/api/logins",
+    requireAdmin,
+    (req, res) => {
 
-// ===============================
-// GET LOGIN HISTORY
-// ===============================
+        db.all(
+            `SELECT
+                id,
+                student_id,
+                login_date,
+                login_time
+             FROM login_history
+             ORDER BY id DESC`,
+            [],
+            (err, rows) => {
 
-app.get("/api/logins", requireAdmin, (req, res) => {
+                if (err) {
 
-    try {
+                    console.error(err);
 
-        const logins = db.prepare(`
-            SELECT *
-            FROM login_history
-            ORDER BY id DESC
-        `).all();
+                    return res.status(500).json({
+                        error: "Database error"
+                    });
+                }
 
-        res.json(logins);
-
-    } catch (error) {
-
-        console.error("Get login history error:", error);
-
-        res.status(500).json({
-            success: false,
-            message: "Failed to fetch login history"
-        });
-
+                res.json(rows);
+            }
+        );
     }
-
-});
+);
 
 
 // ======================================================
-// SERVER START
+// START SERVER
 // ======================================================
 
-app.listen(PORT, "0.0.0.0", () => {
+app.listen(PORT, () => {
 
     console.log(
-        `BVC Backend running on port ${PORT}`
+        `Server running at http://localhost:${PORT}`
     );
 
 });

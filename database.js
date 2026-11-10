@@ -139,4 +139,70 @@ db.prepare(`
 
 console.log("BVC Database connected successfully!");
 
+/* Compatibility layer for callback-style database calls */
+db.get = function (sql, params, callback) {
+    if (typeof params === "function") {
+        callback = params;
+        params = [];
+    }
+
+    try {
+        const statement = db.prepare(sql);
+        const result = Array.isArray(params)
+            ? statement.get(...params)
+            : statement.get(params || {});
+
+        if (callback) callback(null, result);
+    } catch (err) {
+        if (callback) callback(err);
+        else throw err;
+    }
+};
+
+db.all = function (sql, params, callback) {
+    if (typeof params === "function") {
+        callback = params;
+        params = [];
+    }
+
+    try {
+        const statement = db.prepare(sql);
+        const result = Array.isArray(params)
+            ? statement.all(...params)
+            : statement.all(params || {});
+
+        if (callback) callback(null, result);
+    } catch (err) {
+        if (callback) callback(err);
+        else throw err;
+    }
+};
+
+db.run = function (sql, params, callback) {
+    if (typeof params === "function") {
+        callback = params;
+        params = [];
+    }
+
+    try {
+        const statement = db.prepare(sql);
+        const result = Array.isArray(params)
+            ? statement.run(...params)
+            : statement.run(params || {});
+
+        if (callback) {
+            callback.call(
+                {
+                    lastID: Number(result.lastInsertRowid),
+                    changes: result.changes
+                },
+                null
+            );
+        }
+    } catch (err) {
+        if (callback) callback(err);
+        else throw err;
+    }
+};
+
 module.exports = db;

@@ -1,220 +1,171 @@
+
+"use strict";
+
+// =====================================
+// STUDENT LOGIN
+// =====================================
+
 const form = document.querySelector("form");
 
-
-// ===============================
-// STUDENT LOGIN
-// ===============================
-
 if (form) {
-
     form.addEventListener("submit", async function (event) {
-
         event.preventDefault();
 
-        const studentId =
-            document
-                .querySelector('input[type="text"]')
-                .value
-                .trim();
+        const studentIdInput =
+            document.querySelector('input[type="text"]');
 
-        const password =
-            document
-                .querySelector('input[type="password"]')
-                .value
-                .trim();
+        const passwordInput =
+            document.querySelector('input[type="password"]');
 
-
-        // ===============================
-        // EMPTY FIELD CHECK
-        // ===============================
-
-        if (!studentId || !password) {
-
-            alert(
-                "Please enter Student ID and Password"
-            );
-
+        if (!studentIdInput || !passwordInput) {
+            alert("Login form fields not found.");
             return;
         }
 
+        const studentId = studentIdInput.value.trim();
+        const password = passwordInput.value.trim();
 
-        try {
-
-            // ===============================
-            // LOGIN REQUEST
-            // ===============================
-
-            const response = await fetch(
-                "/login",
-                {
-
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body: JSON.stringify({
-
-                        studentId:
-                            studentId,
-
-                        password:
-                            password
-
-                    })
-
-                }
-            );
-
-
-            const data =
-                await response.json();
-
-
-            // ===============================
-            // LOGIN SUCCESS
-            // ===============================
-
-            if (data.success) {
-
-                const student =
-                    data.student;
-
-
-                // ===============================
-                // SAVE STUDENT DETAILS
-                // ===============================
-
-                localStorage.setItem(
-                    "studentId",
-                    student.studentId
-                );
-
-
-                localStorage.setItem(
-                    "studentName",
-                    student.name
-                );
-
-
-                localStorage.setItem(
-                    "studentBranch",
-                    student.branch
-                );
-
-
-                localStorage.setItem(
-                    "studentYear",
-                    student.year
-                );
-
-
-                localStorage.setItem(
-                    "studentSection",
-                    student.section
-                );
-
-
-                // ===============================
-                // SAVE LOGIN TIME
-                // ===============================
-
-                localStorage.setItem(
-                    "loginDate",
-                    data.loginDate
-                );
-
-
-                localStorage.setItem(
-                    "loginTime",
-                    data.loginTime
-                );
-
-
-                alert(
-                    "Welcome " +
-                    student.name +
-                    "!"
-                );
-
-
-                // ===============================
-                // GO TO DASHBOARD
-                // ===============================
-
-                window.location.href =
-                    "dashboard.html";
-
-            } else {
-
-                alert(
-                    data.message ||
-                    "Invalid Student ID or Password"
-                );
-
-            }
-
-        } catch (error) {
-
-            console.error(error);
-
-            alert(
-                "Server connection failed. Please start the backend."
-            );
-
+        if (!studentId || !password) {
+            alert("Please enter Student ID and Password.");
+            return;
         }
 
-    });
+        // Prevent duplicate login requests.
+        const submitButton = form.querySelector(
+            'button[type="submit"], input[type="submit"]'
+        );
 
+        if (submitButton) {
+            submitButton.disabled = true;
+        }
+
+        try {
+            // Send login request to Express backend.
+            const response = await fetch("/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    studentId: studentId,
+                    password: password
+                })
+            });
+
+            // Check whether the server returned JSON.
+            const contentType =
+                response.headers.get("content-type") || "";
+
+            if (!contentType.includes("application/json")) {
+                const responseText = await response.text();
+
+                console.error(
+                    "Expected JSON but received HTML/text:",
+                    responseText
+                );
+
+                alert(
+                    "Server returned HTML instead of JSON. " +
+                    "Check the website URL and backend API."
+                );
+
+                return;
+            }
+
+            const data = await response.json();
+
+            // Handle incorrect credentials or server errors.
+            if (!response.ok || !data.success) {
+                alert(
+                    data.error ||
+                    data.message ||
+                    "Invalid Student ID or Password."
+                );
+                return;
+            }
+
+            const student = data.student;
+
+            if (!student) {
+                alert("Student details were not returned by the server.");
+                return;
+            }
+
+            // Save student details.
+            // Backend database columns use snake_case.
+            localStorage.setItem(
+                "studentId",
+                student.student_id || student.studentId || studentId
+            );
+
+            localStorage.setItem(
+                "studentName",
+                student.name || ""
+            );
+
+            localStorage.setItem(
+                "studentBranch",
+                student.branch || ""
+            );
+
+            localStorage.setItem(
+                "studentYear",
+                student.year || ""
+            );
+
+            localStorage.setItem(
+                "studentSection",
+                student.section || ""
+            );
+
+            // Save login time on the browser.
+            const now = new Date();
+
+            localStorage.setItem(
+                "loginDate",
+                now.toLocaleDateString()
+            );
+
+            localStorage.setItem(
+                "loginTime",
+                now.toLocaleTimeString()
+            );
+
+            alert("Welcome " + (student.name || "Student") + "!");
+
+            // Open student dashboard.
+            window.location.href = "/dashboard.html";
+
+        } catch (error) {
+            console.error("Login error:", error);
+
+            alert(
+                "Server connection failed. " +
+                "Please check whether the backend is running."
+            );
+        } finally {
+            if (submitButton) {
+                submitButton.disabled = false;
+            }
+        }
+    });
 }
 
 
-
-// ===============================
-// LOGOUT
-// ===============================
+// =====================================
+// STUDENT LOGOUT
+// =====================================
 
 function logout() {
+    localStorage.removeItem("studentId");
+    localStorage.removeItem("studentName");
+    localStorage.removeItem("studentBranch");
+    localStorage.removeItem("studentYear");
+    localStorage.removeItem("studentSection");
+    localStorage.removeItem("loginDate");
+    localStorage.removeItem("loginTime");
 
-    // Remove student session data
+    alert("You have been logged out!");
 
-    localStorage.removeItem(
-        "studentId"
-    );
-
-    localStorage.removeItem(
-        "studentName"
-    );
-
-    localStorage.removeItem(
-        "studentBranch"
-    );
-
-    localStorage.removeItem(
-        "studentYear"
-    );
-
-    localStorage.removeItem(
-        "studentSection"
-    );
-
-    localStorage.removeItem(
-        "loginDate"
-    );
-
-    localStorage.removeItem(
-        "loginTime"
-    );
-
-
-    alert(
-        "You have been logged out!"
-    );
-
-
-    window.location.href =
-        "index.html";
-
+    window.location.href = "/index.html";
 }
